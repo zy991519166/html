@@ -6,85 +6,6 @@
     <title>Unity特效详情 - RayDataWeb</title>
     <link rel="stylesheet" href="../styles/common.css">
     <style>
-        /* 重置基础样式 */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            width: 100%;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* 内容容器调整 */
-        .content {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        /* 卡片容器调整 */
-        .card {
-            width: 100%;
-            margin: 20px auto;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        /* 图片容器 */
-        .media-container {
-            width: 100%;
-            margin: 0 auto;
-            text-align: center;
-            overflow: hidden;
-        }
-
-        /* 图片样式调整 */
-        .detail-image {
-            width: 100%;
-            max-width: 800px;
-            height: auto;
-            display: block;
-            margin: 0 auto;
-            object-fit: contain;
-        }
-
-        /* 详情内容布局调整 */
-        .detail-content {
-            width: 100%;
-            margin: 20px auto;
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 20px;
-        }
-
-        /* 移动端适配 */
-        @media (max-width: 768px) {
-            .content {
-                padding: 10px;
-            }
-
-            .card {
-                padding: 15px;
-                margin: 10px auto;
-            }
-
-            .detail-content {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-
-            .detail-image {
-                width: 100%;
-                max-width: 100%;
-            }
-        }
-
         /* 返回按钮样式 */
         .back-button {
             position: fixed;
@@ -118,6 +39,27 @@
             fill: var(--text-primary);
         }
 
+        /* 详情页特有样式 */
+        .detail-image {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+
+        .detail-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .detail-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .detail-info {
             background: var(--card-bg);
             padding: 1.5rem;
@@ -134,20 +76,6 @@
             font-size: 0.9rem;
             color: var(--text-secondary);
         }
-
-        /* 视频响应式调整 */
-        video {
-            width: 100%;
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-        }
-
-        /* 确保所有图片和视频都不会溢出容器 */
-        img, video {
-            max-width: 100%;
-            height: auto;
-        }
     </style>
 </head>
 <body>
@@ -163,9 +91,7 @@
     <div class="content">
         <div class="card">
             <h1>Unity特效展示</h1>
-            <div class="media-container">
-                <img src="../Resource/1.jpg" alt="Unity特效展示" class="detail-image">
-            </div>
+            <img src="../Resource/1.jpg" alt="Unity特效展示" class="detail-image">
             
             <div class="detail-content">
                 <div class="main-content">

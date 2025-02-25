@@ -89,19 +89,23 @@
 
         .content {
             position: relative;
-            padding: 2rem;
+            padding: 10px;
             max-width: 1200px;
             margin: 0 auto;
             z-index: 1; /* 确保内容在画布之上 */
             pointer-events: auto; /* 确保内容可以接收事件 */
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .card {
+            width: calc(100% - 20px);
+            margin: 10px auto;
+            padding: 15px;
+            box-sizing: border-box;
             background: var(--card-bg);
             backdrop-filter: blur(10px);
             border-radius: 15px;
-            padding: 2.5rem;              /* 增加内边距 */
-            margin: 2rem 0;
             box-shadow: 0 4px 20px var(--card-shadow);
             transition: all 0.3s ease;
         }
@@ -109,11 +113,12 @@
         /* 优化视频样式 */
         video {
             width: 100%;
+            height: auto;
+            display: block;
             border-radius: 8px;
-            transition: all 0.3s ease;
             box-shadow: 0 4px 16px var(--card-shadow);
-            filter: brightness(1.1) contrast(1.1); /* 增加亮度和对比度 */
-            background: transparent; /* 移除背景色 */
+            background: transparent;
+            transition: all 0.3s ease;
         }
 
         video:hover {
@@ -177,22 +182,24 @@
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2.5rem;                  /* 增加网格间距 */
-            margin: 2.5rem 0;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .grid > div {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;                    /* 统一内容间距 */
+            width: 100%;
+            box-sizing: border-box;
         }
 
         img {
             width: 100%;
+            height: auto;
+            display: block;
             border-radius: 8px;
-            transition: transform 0.3s;
             box-shadow: 0 4px 16px var(--card-shadow);
+            transition: transform 0.3s;
         }
 
         img:hover {
@@ -256,6 +263,46 @@
 
         .project-link:hover::after {
             opacity: 1;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .content {
+                padding: 5px;
+            }
+
+            .card {
+                width: calc(100% - 10px);
+                margin: 5px auto;
+                padding: 10px;
+            }
+
+            .grid {
+                gap: 10px;
+            }
+
+            h1 { font-size: 1.5rem; }
+            h2 { font-size: 1.2rem; }
+            h3 { font-size: 1rem; }
+            p { font-size: 0.9rem; }
+        }
+
+        /* 超小屏幕适配 */
+        @media (max-width: 480px) {
+            .content {
+                padding: 3px;
+            }
+
+            .card {
+                width: calc(100% - 6px);
+                margin: 3px auto;
+                padding: 8px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
         }
     </style>
 </head>

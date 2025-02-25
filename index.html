@@ -103,17 +103,17 @@
             margin: 10px auto;
             padding: 15px;
             box-sizing: border-box;
-            background: rgba(255, 255, 255, 0.3);  /* 保持较低的不透明度 */
-            backdrop-filter: blur(5px);  /* 降低模糊程度 */
-            -webkit-backdrop-filter: blur(5px);  /* Safari 支持 */
+            background: rgba(255, 255, 255, 0.25);  /* 统一浅色模式的透明度 */
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
             border-radius: 15px;
             box-shadow: 0 4px 20px var(--card-shadow);
             transition: all 0.3s ease;
         }
 
         .card:hover {
-            background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(6px);  /* 悬停时略微增加模糊 */
+            background: rgba(255, 255, 255, 0.35);  /* 统一悬停时的透明度 */
+            backdrop-filter: blur(6px);
             -webkit-backdrop-filter: blur(6px);
             transform: translateY(-2px);
             box-shadow: 0 6px 24px var(--card-shadow-hover);
@@ -121,13 +121,13 @@
 
         /* 深色模式下的卡片样式 */
         [data-theme="dark"] .card {
-            background: rgba(17, 17, 17, 0.25);
+            background: rgba(17, 17, 17, 0.25);  /* 与浅色模式保持一致的透明度 */
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
         }
 
         [data-theme="dark"] .card:hover {
-            background: rgba(17, 17, 17, 0.35);
+            background: rgba(17, 17, 17, 0.35);  /* 与浅色模式保持一致的透明度 */
             backdrop-filter: blur(6px);
             -webkit-backdrop-filter: blur(6px);
         }

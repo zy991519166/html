@@ -40,7 +40,6 @@
             fill: var(--text-primary);
         }
 
-        /* 轮播图样式 */
         .carousel {
             position: relative;
             width: 100%;
@@ -61,7 +60,6 @@
             height: 100%;
             opacity: 0;
             transition: opacity 0.5s ease;
-            cursor: grab;
         }
 
         .carousel-slide.active {
@@ -88,12 +86,10 @@
             cursor: pointer;
             backdrop-filter: blur(5px);
             z-index: 100;
-            opacity: 0.7;
             transition: all 0.3s ease;
         }
 
         .carousel-button:hover {
-            opacity: 1;
             background: rgba(255, 255, 255, 0.3);
             transform: translateY(-50%) scale(1.1);
         }
@@ -125,35 +121,29 @@
         @media (max-width: 768px) {
             .carousel {
                 height: 300px;
-                /* 在小屏幕上减小轮播图高度 */
             }
 
             .detail-content {
                 margin-top: 1rem;
-                /* 减小内容上边距 */
             }
 
             .description {
                 margin: 1rem 0;
-                /* 减小描述的上下边距 */
             }
         }
 
         @media (max-width: 480px) {
             .carousel {
                 height: 200px;
-                /* 在超小屏幕上进一步减小轮播图高度 */
             }
 
             .back-button {
                 width: 40px;
-                /* 减小返回按钮大小 */
                 height: 40px;
             }
 
             .back-button svg {
                 width: 20px;
-                /* 减小图标大小 */
                 height: 20px;
             }
         }
@@ -161,7 +151,6 @@
 </head>
 
 <body>
-    <!-- 返回按钮 -->
     <a href="../index.html" class="back-button" aria-label="返回">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" />
@@ -170,11 +159,10 @@
 
     <div id="canvas-container"></div>
 
-    <div class="content">
-        <div class="card">
+    <main class="content">
+        <section class="card">
             <h1>截图展示</h1>
 
-            <!-- 轮播图 -->
             <div class="carousel">
                 <div class="carousel-container">
                     <!-- 图片将通过JavaScript动态加载 -->
@@ -203,8 +191,8 @@
                     </ul>
                 </div>
             </div>
-        </div>
-    </div>
+        </section>
+    </main>
 
     <script src="../scripts/theme.js"></script>
     <script>
@@ -213,11 +201,6 @@
                 this.container = document.querySelector('.carousel-container');
                 this.slides = [];
                 this.currentIndex = 0;
-                this.isDragging = false;
-                this.startPos = 0;
-                this.currentTranslate = 0;
-                this.prevTranslate = 0;
-                this.animationID = 0;
                 this.isAutoPlaying = true;
                 this.loadImages();
                 this.setupEventListeners();
@@ -226,20 +209,14 @@
             async loadImages() {
                 try {
                     const response = await fetch('../Resource/screencap/manifest.json');
-                    if (!response.ok) {
-                        throw new Error(`Failed to fetch images: ${response.statusText}`);
-                    }
+                    if (!response.ok) throw new Error(`Failed to fetch images: ${response.statusText}`);
                     this.images = await response.json();
                     this.createSlides();
                     this.updateSlides();
-                    // 开始自动轮播
                     this.startAutoPlay();
                 } catch (error) {
                     console.error('Error loading images:', error);
-                    // 显示错误提示
-                    const errorMessage = document.createElement('p');
-                    errorMessage.textContent = '图片加载失败，请稍后重试。';
-                    this.container.appendChild(errorMessage);
+                    this.showError('图片加载失败，请稍后重试。');
                 }
             }
 
@@ -259,111 +236,49 @@
             }
 
             setupEventListeners() {
-                // 按钮控制
-                document.querySelector('.carousel-button.prev').addEventListener('click', () => {
-                    this.pauseAutoPlay();
-                    this.prev();
-                    this.resumeAutoPlay();
-                });
-                document.querySelector('.carousel-button.next').addEventListener('click', () => {
-                    this.pauseAutoPlay();
-                    this.next();
-                    this.resumeAutoPlay();
-                });
-
-                // 触摸事件
+                document.querySelector('.carousel-button.prev').addEventListener('click', () => this.changeSlide(-1));
+                document.querySelector('.carousel-button.next').addEventListener('click', () => this.changeSlide(1));
                 this.slides.forEach(slide => {
-                    slide.addEventListener('touchstart', e => {
-                        this.pauseAutoPlay();
-                        this.touchStart(e);
-                    });
-                    slide.addEventListener('touchend', () => {
-                        this.touchEnd();
-                        this.resumeAutoPlay();
-                    });
+                    slide.addEventListener('touchstart', e => this.touchStart(e));
+                    slide.addEventListener('touchend', () => this.touchEnd());
+                    slide.addEventListener('mousedown', e => this.touchStart(e));
+                    slide.addEventListener('mouseup', () => this.touchEnd());
+                    slide.addEventListener('mouseleave', () => this.touchEnd());
                 });
-
-                // 鼠标事件
-                this.slides.forEach(slide => {
-                    slide.addEventListener('mousedown', e => {
-                        this.pauseAutoPlay();
-                        this.touchStart(e);
-                    });
-                    slide.addEventListener('mouseup', () => {
-                        this.touchEnd();
-                        this.resumeAutoPlay();
-                    });
-                    slide.addEventListener('mouseleave', () => {
-                        this.touchEnd();
-                        this.resumeAutoPlay();
-                    });
-                });
-
-                // 键盘控制
-                document.addEventListener('keydown', e => {
-                    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-                        this.pauseAutoPlay();
-                        if (e.key === 'ArrowLeft') this.prev();
-                        if (e.key === 'ArrowRight') this.next();
-                        this.resumeAutoPlay();
-                    }
-                });
+                document.addEventListener('keydown', e => this.handleKeydown(e));
             }
 
-            touchStart(e) {
-                this.isDragging = true;
-                this.startPos = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
-            }
-
-            touchMove(e) {
-                if (!this.isDragging) return;
-                const currentPosition = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
-                const diff = currentPosition - this.startPos;
-
-                if (Math.abs(diff) > 100) {
-                    this.isDragging = false;
-                    if (diff > 0) this.prev();
-                    else this.next();
-                }
-            }
-
-            touchEnd() {
-                this.isDragging = false;
-            }
-
-            prev() {
-                this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
+            changeSlide(direction) {
+                this.pauseAutoPlay();
+                this.currentIndex = (this.currentIndex + direction + this.images.length) % this.images.length;
                 this.updateSlides();
+                this.resumeAutoPlay();
             }
 
-            next() {
-                this.currentIndex = (this.currentIndex + 1) % this.images.length;
-                this.updateSlides();
+            handleKeydown(e) {
+                if (e.key === 'ArrowLeft') this.changeSlide(-1);
+                if (e.key === 'ArrowRight') this.changeSlide(1);
+            }
+
+            showError(message) {
+                const errorMessage = document.createElement('p');
+                errorMessage.textContent = message;
+                this.container.appendChild(errorMessage);
             }
 
             startAutoPlay() {
-                // 每3秒调用一次 next 方法
-                this.intervalId = setInterval(() => {
-                    this.next();
-                }, 3000);
+                this.intervalId = setInterval(() => this.changeSlide(1), 3000);
             }
 
             pauseAutoPlay() {
-                if (this.isAutoPlaying) {
-                    clearInterval(this.intervalId);
-                    this.isAutoPlaying = false;
-                }
+                clearInterval(this.intervalId);
             }
 
             resumeAutoPlay() {
-                if (!this.isAutoPlaying) {
-                    this.startAutoPlay();
-                    this.isAutoPlaying = true;
-                }
+                this.startAutoPlay();
             }
         }
 
-        // 初始化
         window.addEventListener('load', () => {
             new ThemeManager();
             new Carousel();

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unity特效详情 - RayDataWeb</title>
+    <link rel="stylesheet" href="../styles/common.css">
+    <style>
+        /* 返回按钮样式 */
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: var(--card-bg);
+            border: none;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px var(--card-shadow);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.9;
+        }
+
+        .back-button:hover {
+            opacity: 1;
+            transform: scale(1.1);
+            background: var(--card-bg-hover);
+            box-shadow: 0 4px 12px var(--card-shadow-hover);
+        }
+
+        .back-button svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--text-primary);
+        }
+
+        /* 详情页特有样式 */
+        .detail-image {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+
+        .detail-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .detail-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .detail-info {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+
+        .tag {
+            display: inline-block;
+            background: var(--card-bg-hover);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            margin: 0.25rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回按钮 -->
+    <a href="../index.html" class="back-button" aria-label="返回">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"/>
+        </svg>
+    </a>
+
+    <div id="canvas-container"></div>
+    
+    <div class="content">
+        <div class="card">
+            <h1>Unity特效展示</h1>
+            <img src="../Resource/1.jpg" alt="Unity特效展示" class="detail-image">
+            
+            <div class="detail-content">
+                <div class="main-content">
+                    <h2>项目描述</h2>
+                    <p>这是一个基于Unity引擎开发的粒子特效系统，主要展示了各种高级视觉效果的实现。</p>
+                    
+                    <h2>技术特点</h2>
+                    <p>使用Unity的粒子系统实现复杂的视觉效果，包括但不限于：</p>
+                    <ul>
+                        <li>高级粒子系统</li>
+                        <li>实时光照效果</li>
+                        <li>物理模拟</li>
+                    </ul>
+                </div>
+                
+                <div class="side-content">
+                    <div class="detail-info">
+                        <h3>技术标签</h3>
+                        <div class="tags">
+                            <span class="tag">Unity</span>
+                            <span class="tag">C#</span>
+                            <span class="tag">特效</span>
+                            <span class="tag">粒子系统</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../scripts/theme.js"></script>
+    <script>
+        // 初始化主题
+        window.addEventListener('load', () => {
+            new ThemeManager();
+        });
+    </script>
+</body>
+</html> 

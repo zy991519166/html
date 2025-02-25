@@ -1,0 +1,78 @@
+/* 主题变量 */
+:root {
+    --bg-gradient-start: #ffffff;
+    --bg-gradient-end: #f8fafc;
+    --text-primary: #334155;
+    --text-secondary: #64748b;
+    --title-primary: #0f172a;
+    --title-secondary: #1e293b;
+    --title-tertiary: #334155;
+    --card-bg: rgba(255, 255, 255, 0.95);
+    --card-bg-hover: rgba(255, 255, 255, 1);
+    --card-shadow: rgba(0, 0, 0, 0.06);
+    --card-shadow-hover: rgba(0, 0, 0, 0.1);
+    --accent-color: #3b82f6;
+}
+
+[data-theme="dark"] {
+    --bg-gradient-start: #000000;
+    --bg-gradient-end: #111111;
+    --text-primary: #e2e8f0;
+    --text-secondary: #cbd5e1;
+    --title-primary: #f8fafc;
+    --title-secondary: #f1f5f9;
+    --title-tertiary: #e2e8f0;
+    --card-bg: rgba(17, 17, 17, 0.95);
+    --card-bg-hover: rgba(24, 24, 27, 0.98);
+    --card-shadow: rgba(0, 0, 0, 0.3);
+    --card-shadow-hover: rgba(0, 0, 0, 0.4);
+    --accent-color: #60a5fa;
+}
+
+/* 基础样式 */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(45deg, var(--bg-gradient-start), var(--bg-gradient-end));
+    color: var(--text-primary);
+    min-height: 100vh;
+}
+
+/* 主题切换按钮 */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: var(--card-bg);
+    border: none;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px var(--card-shadow);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.9;
+}
+
+/* 卡片样式 */
+.card {
+    background: var(--card-bg);
+    border-radius: 15px;
+    padding: 2.5rem;
+    margin: 2rem 0;
+    box-shadow: 0 4px 20px var(--card-shadow);
+    backdrop-filter: blur(10px);
+}
+
+/* 标题样式 */
+h1, h2, h3 {
+    color: var(--title-primary);
+    margin: 0 0 1rem;
+}
+
+/* ... 其他共享样式 ... */ 

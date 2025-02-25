@@ -233,6 +233,30 @@
             transition: all 0.3s ease;
             z-index: 1001;
         }
+
+        /* 添加链接样式 */
+        .project-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            display: inline-block;
+        }
+
+        .project-link:hover {
+            color: var(--title-primary);
+            transform: translateX(5px);
+        }
+
+        .project-link::after {
+            content: ' →';
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-link:hover::after {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -262,20 +286,26 @@
                 <!-- 第一个图片 -->
                 <div>
                     <h3>Unity特效</h3>
-                    <img src="Resource/1.jpg" alt="Unity特效展示">
-                    <p>基于Unity引擎开发的粒子特效系统</p>
+                    <a href="pages/unity-effects.html">
+                        <img src="Resource/1.jpg" alt="Unity特效展示">
+                    </a>
+                    <a href="pages/unity-effects.html" class="project-link">基于Unity引擎开发的粒子特效系统</a>
                 </div>
                 <!-- 第二个图片 -->
                 <div>
                     <h3>UE特效</h3>
-                    <img src="Resource/2.jpg" alt="UE特效展示">
-                    <p>基于虚幻引擎开发的粒子特效系统</p>
+                    <a href="pages/ue-effects.html">
+                        <img src="Resource/2.jpg" alt="UE特效展示">
+                    </a>
+                    <a href="pages/ue-effects.html" class="project-link">基于虚幻引擎开发的粒子特效系统</a>
                 </div>
                 <!-- 第三个图片 -->
                 <div>
                     <h3>Shader特效</h3>
-                    <img src="Resource/3.png" alt="Shader特效展示">
-                    <p>基于自定义Shader开发的特效系统</p>
+                    <a href="pages/shader-effects.html">
+                        <img src="Resource/3.png" alt="Shader特效展示">
+                    </a>
+                    <a href="pages/shader-effects.html" class="project-link">基于自定义Shader开发的特效系统</a>
                 </div>
             </div>
         </div>
@@ -290,7 +320,7 @@
                         <source src="Resource/v1.mp4" type="video/mp4">
                         您的浏览器不支持视频播放
                     </video>
-                    <p>Unity引擎下的粒子特效系统演示</p>
+                    <a href="pages/unity-particle.html" class="project-link">Unity引擎下的粒子特效系统演示</a>
                 </div>
                 <!-- 第二个视频 -->
                 <div>
@@ -299,14 +329,10 @@
                         <source src="Resource/v2.mp4" type="video/mp4">
                         您的浏览器不支持视频播放
                     </video>
-                    <p>虚幻引擎下的粒子特效系统演示</p>
+                    <a href="pages/ue-particle.html" class="project-link">虚幻引擎下的粒子特效系统演示</a>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="modal-overlay" id="imageModal">
-        <img class="modal-image" id="modalImage" src="" alt="放大图片">
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -612,9 +638,13 @@
                 this.isDark = false;
                 this.particleBackground = null;
                 
-                // 检查本地存储的主题设置
+                // 检查URL参数中的主题设置
+                const urlParams = new URLSearchParams(window.location.search);
+                const themeParam = urlParams.get('theme');
                 const savedTheme = localStorage.getItem('theme');
-                if (savedTheme === 'dark') {
+                
+                // 优先使用URL参数的主题设置，其次使用本地存储的设置
+                if (themeParam === 'dark' || (!themeParam && savedTheme === 'dark')) {
                     this.enableDarkMode();
                 }
 
@@ -636,6 +666,8 @@
                 if (this.particleBackground) {
                     this.particleBackground.recreateParticles();
                 }
+                // 更新所有链接的URL
+                this.updateLinksTheme('dark');
             }
 
             enableLightMode() {
@@ -649,6 +681,8 @@
                 if (this.particleBackground) {
                     this.particleBackground.recreateParticles();
                 }
+                // 更新所有链接的URL
+                this.updateLinksTheme('light');
             }
 
             addEventListeners() {
@@ -660,6 +694,18 @@
                     }
                 });
             }
+
+            // 添加新方法：更新所有链接的主题参数
+            updateLinksTheme(theme) {
+                const links = document.querySelectorAll('a');
+                links.forEach(link => {
+                    if (link.href && link.href.startsWith(window.location.origin)) {
+                        const url = new URL(link.href);
+                        url.searchParams.set('theme', theme);
+                        link.href = url.toString();
+                    }
+                });
+            }
         }
 
         // 初始化
@@ -667,41 +713,6 @@
             const themeManager = new ThemeManager();
             const particleBackground = new ParticleBackground();
             themeManager.setParticleBackground(particleBackground);
-        });
-
-        // 修改图片查看器代码
-        document.addEventListener('DOMContentLoaded', () => {
-            const modal = document.getElementById('imageModal');
-            const modalImg = document.getElementById('modalImage');
-            const images = document.querySelectorAll('.grid img');
-            const canvasContainer = document.getElementById('canvas-container');
-
-            const showModal = (src) => {
-                modal.style.display = 'block';
-                modalImg.src = src;
-                document.body.style.overflow = 'hidden';
-                canvasContainer.style.pointerEvents = 'none';
-            };
-
-            const hideModal = () => {
-                modal.style.display = 'none';
-                document.body.style.overflow = '';
-                canvasContainer.style.pointerEvents = 'auto';
-            };
-
-            images.forEach(img => {
-                img.addEventListener('click', (e) => showModal(e.target.src));
-                img.addEventListener('touchend', (e) => {
-                    e.preventDefault();
-                    showModal(e.target.src);
-                });
-            });
-
-            modal.addEventListener('click', hideModal);
-            modal.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                hideModal();
-            });
         });
 
         // 视频互斥播放控制

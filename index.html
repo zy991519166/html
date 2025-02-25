@@ -84,7 +84,7 @@
             height: 100%;
             z-index: -1;
             background: linear-gradient(45deg, var(--bg-gradient-start), var(--bg-gradient-end));
-            pointer-events: none; /* 当弹窗显示时不接收鼠标事件 */
+            pointer-events: auto; /* 默认允许事件 */
         }
 
         .content {
@@ -92,6 +92,8 @@
             padding: 2rem;
             max-width: 1200px;
             margin: 0 auto;
+            z-index: 1; /* 确保内容在画布之上 */
+            pointer-events: auto; /* 确保内容可以接收事件 */
         }
 
         .card {
@@ -216,7 +218,7 @@
             z-index: 1000;
             cursor: pointer;
             backdrop-filter: blur(5px);
-            pointer-events: auto; /* 确保遮罩层可以接收点击事件 */
+            pointer-events: auto;
         }
 
         .modal-image {
@@ -230,7 +232,6 @@
             box-shadow: 0 4px 32px rgba(0, 0, 0, 0.5);
             transition: all 0.3s ease;
             z-index: 1001;
-            pointer-events: none; /* 防止图片接收鼠标事件 */
         }
     </style>
 </head>
@@ -495,50 +496,40 @@
 
             addEventListeners() {
                 window.addEventListener('mousemove', (e) => {
-                    this.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-                    this.mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
-
-                    this.mousePosition.set(
-                        this.mouse.x * 50,
-                        this.mouse.y * 50,
-                        0
-                    );
-
-                    // 根据水平位置更新形状
-                    const horizontalPosition = e.clientX / window.innerWidth;
-                    this.updateShapeByPosition(horizontalPosition);
-
-                    // 根据垂直位置更新大小
-                    const verticalPosition = e.clientY / window.innerHeight;
-                    this.updateSizeByPosition(verticalPosition);
+                    this.updateMousePosition(e.clientX, e.clientY);
                 });
 
                 window.addEventListener('touchmove', (e) => {
-                    e.preventDefault();
-                    const touch = e.touches[0];
-                    this.mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
-                    this.mouse.y = -(touch.clientY / window.innerHeight) * 2 + 1;
-
-                    this.mousePosition.set(
-                        this.mouse.x * 50,
-                        this.mouse.y * 50,
-                        0
-                    );
-
-                    // 根据水平位置更新形状
-                    const horizontalPosition = touch.clientX / window.innerWidth;
-                    this.updateShapeByPosition(horizontalPosition);
-
-                    // 根据垂直位置更新大小
-                    const verticalPosition = touch.clientY / window.innerHeight;
-                    this.updateSizeByPosition(verticalPosition);
-                }, { passive: false });
+                    if (e.touches.length > 0) {
+                        const touch = e.touches[0];
+                        this.updateMousePosition(touch.clientX, touch.clientY);
+                    }
+                });
 
                 window.addEventListener('resize', () => {
                     this.camera.aspect = window.innerWidth / window.innerHeight;
                     this.camera.updateProjectionMatrix();
                     this.renderer.setSize(window.innerWidth, window.innerHeight);
                 });
+            }
+
+            updateMousePosition(x, y) {
+                this.mouse.x = (x / window.innerWidth) * 2 - 1;
+                this.mouse.y = -(y / window.innerHeight) * 2 + 1;
+
+                this.mousePosition.set(
+                    this.mouse.x * 50,
+                    this.mouse.y * 50,
+                    0
+                );
+
+                // 根据水平位置更新形状
+                const horizontalPosition = x / window.innerWidth;
+                this.updateShapeByPosition(horizontalPosition);
+
+                // 根据垂直位置更新大小
+                const verticalPosition = y / window.innerHeight;
+                this.updateSizeByPosition(verticalPosition);
             }
 
             updateShapeByPosition(horizontalPosition) {
@@ -678,26 +669,38 @@
             themeManager.setParticleBackground(particleBackground);
         });
 
-        // 修改图片点击放大功能
+        // 修改图片查看器代码
         document.addEventListener('DOMContentLoaded', () => {
             const modal = document.getElementById('imageModal');
             const modalImg = document.getElementById('modalImage');
             const images = document.querySelectorAll('.grid img');
             const canvasContainer = document.getElementById('canvas-container');
 
+            const showModal = (src) => {
+                modal.style.display = 'block';
+                modalImg.src = src;
+                document.body.style.overflow = 'hidden';
+                canvasContainer.style.pointerEvents = 'none';
+            };
+
+            const hideModal = () => {
+                modal.style.display = 'none';
+                document.body.style.overflow = '';
+                canvasContainer.style.pointerEvents = 'auto';
+            };
+
             images.forEach(img => {
-                img.addEventListener('click', (e) => {
-                    modal.style.display = 'block';
-                    modalImg.src = e.target.src;
-                    document.body.style.overflow = 'hidden';
-                    canvasContainer.style.pointerEvents = 'none'; // 禁用canvas鼠标事件
+                img.addEventListener('click', (e) => showModal(e.target.src));
+                img.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    showModal(e.target.src);
                 });
             });
 
-            modal.addEventListener('click', () => {
-                modal.style.display = 'none';
-                document.body.style.overflow = '';
-                canvasContainer.style.pointerEvents = ''; // 恢复canvas鼠标事件
+            modal.addEventListener('click', hideModal);
+            modal.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                hideModal();
             });
         });
 

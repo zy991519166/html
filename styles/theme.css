@@ -1,0 +1,12 @@
+/* 主题变量和相关样式 */
+:root {
+    --bg-gradient-start: #ffffff;
+    --bg-gradient-end: #f8fafc;
+    /* ... 其他主题变量 ... */
+}
+
+[data-theme="dark"] {
+    --bg-gradient-start: #000000;
+    --bg-gradient-end: #111111;
+    /* ... 其他暗色主题变量 ... */
+} 

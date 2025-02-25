@@ -1,0 +1,36 @@
+/* 卡片组件 */
+.card {
+    --card-padding: clamp(1rem, 2.5vw, 2.5rem);
+    --card-margin: clamp(0.5rem, 2vw, 2rem);
+    
+    width: calc(100% - var(--card-margin) * 2);
+    padding: var(--card-padding);
+    margin: var(--card-margin) auto;
+    background: var(--card-bg);
+    border-radius: 15px;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.3s, box-shadow 0.3s;
+    /* ... 其他卡片样式 ... */
+}
+
+/* 媒体容器 */
+.media-container {
+    --media-radius: 8px;
+    --media-shadow: var(--card-shadow);
+    
+    width: 100%;
+    overflow: hidden;
+    border-radius: var(--media-radius);
+    box-shadow: var(--media-shadow);
+    /* ... 其他媒体容器样式 ... */
+}
+
+/* 响应式网格 */
+.grid {
+    --min-column-width: 280px;
+    --gap: clamp(8px, 2vw, 20px);
+    
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(var(--min-column-width), 1fr));
+    gap: var(--gap);
+} 

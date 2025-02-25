@@ -103,11 +103,33 @@
             margin: 10px auto;
             padding: 15px;
             box-sizing: border-box;
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.3);  /* 保持较低的不透明度 */
+            backdrop-filter: blur(10px);  /* 添加毛玻璃效果 */
+            -webkit-backdrop-filter: blur(10px);  /* Safari 支持 */
             border-radius: 15px;
             box-shadow: 0 4px 20px var(--card-shadow);
             transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px var(--card-shadow-hover);
+        }
+
+        /* 深色模式下的卡片样式 */
+        [data-theme="dark"] .card {
+            background: rgba(17, 17, 17, 0.25);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        [data-theme="dark"] .card:hover {
+            background: rgba(17, 17, 17, 0.35);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
 
         /* 优化视频样式 */
@@ -204,12 +226,6 @@
 
         img:hover {
             transform: scale(1.03);
-            box-shadow: 0 6px 24px var(--card-shadow-hover);
-        }
-
-        .card:hover {
-            background: var(--card-bg-hover);
-            transform: translateY(-2px);
             box-shadow: 0 6px 24px var(--card-shadow-hover);
         }
 

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3DMax效果展示 - RayDataWeb</title>
+    <link rel="stylesheet" href="../styles/common.css">
+    <style>
+        /* 返回按钮样式 */
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: var(--card-bg);
+            border: none;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px var(--card-shadow);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.9;
+        }
+
+        .back-button:hover {
+            opacity: 1;
+            transform: scale(1.1);
+            background: var(--card-bg-hover);
+            box-shadow: 0 4px 12px var(--card-shadow-hover);
+        }
+
+        .back-button svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--text-primary);
+        }
+
+        /* 内容样式 */
+        .detail-image {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+
+        .detail-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .detail-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .detail-info {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+
+        .tag {
+            display: inline-block;
+            background: var(--card-bg-hover);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            margin: 0.25rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .carousel {
+            position: relative;
+            width: 100%;
+            max-height: 500px; /* 保持当前图片尺寸 */
+            overflow: hidden;
+        }
+
+        .carousel-container {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .carousel-slide {
+            display: none; /* 默认不显示 */
+        }
+
+        .carousel-slide.active {
+            display: block; /* 仅显示活动的幻灯片 */
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回按钮 -->
+    <a href="../index.html" class="back-button" aria-label="返回">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"/>
+        </svg>
+    </a>
+
+    <div id="canvas-container"></div>
+    
+    <div class="content">
+        <div class="card">
+            <h1>MaxScript</h1>
+            <div class="carousel">
+                <div class="carousel-container">
+                    <img src="../Resource/max.png" alt="Image 1" class="carousel-slide active">
+                    <img src="../Resource/max2.png" alt="Image 2" class="carousel-slide">
+                    <img src="../Resource/max3.png" alt="Image 3" class="carousel-slide">
+                </div>
+                <button class="carousel-button prev" aria-label="上一张">❮</button>
+                <button class="carousel-button next" aria-label="下一张">❯</button>
+            </div>
+            
+            <div class="detail-content">
+                <div class="main-content">
+                    <h2>需求描述</h2>
+                    <p>由于原始模型并不符合要求，需要制作人员对其进行优化处理，包括减面、优化UV、优化法线、设置顶点色、光滑组、优化层级结构等。通过收集制作需求，我设计了多个MaxScript脚本，将大量重复性工作自动化，加速模型优化。</p>
+                    
+                    <h2>技术特点</h2>
+                    <p>使用3DMax实现复杂的视觉效果，包括但不限于：</p>
+                    <ul>
+                        <li>高级建模技术</li>
+                        <li>实时渲染效果</li>
+                        <li>物理模拟</li>
+                    </ul>
+                </div>
+                
+                <div class="side-content">
+                    <div class="detail-info">
+                        <h3>技术标签</h3>
+                        <div class="tags">
+                            <span class="tag">3DMax</span>
+                            <span class="tag">建模</span>
+                            <span class="tag">UV</span>
+                            <span class="tag">MaxScript</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../scripts/theme.js"></script>
+    <script>
+        // 初始化主题
+        window.addEventListener('load', () => {
+            new ThemeManager();
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.carousel-slide');
+            const prevButton = document.querySelector('.carousel-button.prev');
+            const nextButton = document.querySelector('.carousel-button.next');
+            let currentIndex = 0;
+
+            function showSlide(index) {
+                slides.forEach((slide, i) => {
+                    slide.classList.remove('active');
+                    if (i === index) {
+                        slide.classList.add('active');
+                    }
+                });
+            }
+
+            function nextSlide() {
+                currentIndex = (currentIndex + 1) % slides.length;
+                showSlide(currentIndex);
+            }
+
+            function prevSlide() {
+                currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+                showSlide(currentIndex);
+            }
+
+            nextButton.addEventListener('click', nextSlide);
+            prevButton.addEventListener('click', prevSlide);
+
+            // 自动轮播
+            setInterval(nextSlide, 3000); // 每3秒切换一次
+
+            // 确保在页面加载时显示第一张图片
+            showSlide(currentIndex);
+        });
+    </script>
+</body>
+</html> 

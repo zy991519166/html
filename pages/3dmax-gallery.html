@@ -58,6 +58,15 @@
             .detail-content {
                 grid-template-columns: 1fr;
             }
+
+            .carousel {
+                max-height: 300px; /* 在小屏幕上调整最大高度 */
+            }
+
+            .carousel-slide img {
+                width: 100%; /* 确保图片宽度为100% */
+                height: auto; /* 高度自适应 */
+            }
         }
 
         .detail-info {
@@ -91,10 +100,48 @@
 
         .carousel-slide {
             display: none; /* 默认不显示 */
+            width: 100%; /* 确保每张幻灯片占满整个宽度 */
+            height: auto; /* 高度自适应 */
         }
 
         .carousel-slide.active {
             display: block; /* 仅显示活动的幻灯片 */
+        }
+
+        .carousel-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5); /* 半透明背景 */
+            border: none;
+            border-radius: 50%; /* 圆形按钮 */
+            width: 50px; /* 按钮宽度 */
+            height: 50px; /* 按钮高度 */
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease, transform 0.3s ease; /* 添加过渡效果 */
+            z-index: 10; /* 确保按钮在其他元素之上 */
+        }
+
+        .carousel-button.prev {
+            left: 10px; /* 左侧按钮位置 */
+        }
+
+        .carousel-button.next {
+            right: 10px; /* 右侧按钮位置 */
+        }
+
+        .carousel-button:hover {
+            background: rgba(255, 255, 255, 0.7); /* 悬停时变为白色 */
+            transform: translateY(-50%) scale(1.1); /* 悬停时放大 */
+        }
+
+        .carousel-button svg {
+            width: 24px; /* 图标宽度 */
+            height: 24px; /* 图标高度 */
+            fill: white; /* 图标颜色 */
         }
     </style>
 </head>
@@ -117,8 +164,16 @@
                     <img src="../Resource/max2.png" alt="Image 2" class="carousel-slide">
                     <img src="../Resource/max3.png" alt="Image 3" class="carousel-slide">
                 </div>
-                <button class="carousel-button prev" aria-label="上一张">❮</button>
-                <button class="carousel-button next" aria-label="下一张">❯</button>
+                <button class="carousel-button prev" aria-label="上一张">
+                    <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
+                        <path d="M15.41 6.59L14 5l-6 6 6 6 1.41-1.41L10.83 12z" />
+                    </svg>
+                </button>
+                <button class="carousel-button next" aria-label="下一张">
+                    <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
+                        <path d="M8.59 6.59L10 5l6 6-6 6-1.41-1.41L12.17 12z" />
+                    </svg>
+                </button>
             </div>
             
             <div class="detail-content">

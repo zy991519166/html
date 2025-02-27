@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shader效果展示 - RayDataWeb</title>
+    <link rel="stylesheet" href="../styles/common.css">
+    <style>
+        /* 返回按钮样式 */
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: var(--card-bg);
+            border: none;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px var(--card-shadow);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.9;
+        }
+
+        .back-button:hover {
+            opacity: 1;
+            transform: scale(1.1);
+            background: var(--card-bg-hover);
+            box-shadow: 0 4px 12px var(--card-shadow-hover);
+        }
+
+        .back-button svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--text-primary);
+        }
+
+        /* 内容样式 */
+        .detail-image {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+
+        .detail-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .detail-content {
+                grid-template-columns: 1fr;
+            }
+
+            .carousel {
+                max-height: 300px; /* 在小屏幕上调整最大高度 */
+            }
+
+            .carousel-slide img {
+                width: 100%; /* 确保图片宽度为100% */
+                height: auto; /* 高度自适应 */
+            }
+        }
+
+        .detail-info {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+
+        .tag {
+            display: inline-block;
+            background: var(--card-bg-hover);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            margin: 0.25rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .carousel {
+            position: relative;
+            width: 100%;
+            max-height: 500px; /* 保持当前图片尺寸 */
+            overflow: hidden;
+        }
+
+        .carousel-container {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .carousel-slide {
+            display: none; /* 默认不显示 */
+            width: 100%; /* 确保每张幻灯片占满整个宽度 */
+            height: auto; /* 高度自适应 */
+        }
+
+        .carousel-slide.active {
+            display: block; /* 仅显示活动的幻灯片 */
+        }
+
+        .carousel-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5); /* 半透明背景 */
+            border: none;
+            border-radius: 50%; /* 圆形按钮 */
+            width: 50px; /* 按钮宽度 */
+            height: 50px; /* 按钮高度 */
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease, transform 0.3s ease; /* 添加过渡效果 */
+            z-index: 10; /* 确保按钮在其他元素之上 */
+        }
+
+        .carousel-button.prev {
+            left: 10px; /* 左侧按钮位置 */
+        }
+
+        .carousel-button.next {
+            right: 10px; /* 右侧按钮位置 */
+        }
+
+        .carousel-button:hover {
+            background: rgba(255, 255, 255, 0.7); /* 悬停时变为白色 */
+            transform: translateY(-50%) scale(1.1); /* 悬停时放大 */
+        }
+
+        .carousel-button svg {
+            width: 24px; /* 图标宽度 */
+            height: 24px; /* 图标高度 */
+            fill: white; /* 图标颜色 */
+        }
+
+        .slide-description {
+            margin-top: 1rem;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            text-align: center; /* 居中对齐 */
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回按钮 -->
+    <a href="../index.html" class="back-button" aria-label="返回">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"/>
+        </svg>
+    </a>
+
+    <div id="canvas-container"></div>
+    
+    <div class="content">
+        <div class="card">
+            <h1>Shader效果展示</h1>
+            <div class="carousel">
+                <div class="carousel-container">
+                    <img src="../Resource/shader1.png" alt="Shader Image 1" class="carousel-slide active">
+                    <img src="../Resource/shader2.png" alt="Shader Image 2" class="carousel-slide">
+                    <img src="../Resource/shader3.png" alt="Shader Image 3" class="carousel-slide">
+                </div>
+                <button class="carousel-button prev" aria-label="上一张">
+                    <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
+                        <path d="M15.41 6.59L14 5l-6 6 6 6 1.41-1.41L10.83 12z" />
+                    </svg>
+                </button>
+                <button class="carousel-button next" aria-label="下一张">
+                    <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
+                        <path d="M8.59 6.59L10 5l6 6-6 6-1.41-1.41L12.17 12z" />
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="detail-content">
+                <div class="main-content">
+                    <h2>需求描述</h2>
+                    <p>本项目展示了多种Shader效果，旨在提升3D模型的视觉表现。通过使用不同的Shader技术，我们能够实现更复杂的光照和材质效果。</p>
+                    
+                    <h2>技术特点</h2>
+                    <p>使用Shader实现的效果包括但不限于：</p>
+                    <ul>
+                        <li>动态光照效果</li>
+                        <li>反射和折射效果</li>
+                        <li>复杂的材质表现</li>
+                    </ul>
+                </div>
+                
+                <div class="side-content">
+                    <div class="detail-info">
+                        <h3>技术标签</h3>
+                        <div class="tags">
+                            <span class="tag">Shader</span>
+                            <span class="tag">3D渲染</span>
+                            <span class="tag">光照</span>
+                            <span class="tag">材质</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../scripts/theme.js"></script>
+    <script>
+        // 初始化主题
+        window.addEventListener('load', () => {
+            new ThemeManager();
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.carousel-slide');
+            const prevButton = document.querySelector('.carousel-button.prev');
+            const nextButton = document.querySelector('.carousel-button.next');
+            
+            // 定义每张图片对应的标题和描述
+            const titles = [
+                "Shader效果 1",
+                "Shader效果 2",
+                "Shader效果 3"
+            ];
+            
+            const descriptions = [
+                "这是第一张Shader效果的描述。",
+                "这是第二张Shader效果的描述。",
+                "这是第三张Shader效果的描述。"
+            ];
+            
+            const titleElement = document.querySelector('.content h1'); // 获取标题元素
+            const descriptionElement = document.createElement('p'); // 创建描述元素
+            descriptionElement.className = 'slide-description'; // 添加类名
+            descriptionElement.textContent = descriptions[0]; // 初始化为第一张的描述
+            document.querySelector('.content').appendChild(descriptionElement); // 将描述插入到内容中
+
+            let currentIndex = 0;
+
+            function showSlide(index) {
+                slides.forEach((slide, i) => {
+                    slide.classList.remove('active');
+                    if (i === index) {
+                        slide.classList.add('active');
+                        titleElement.textContent = titles[index]; // 更新标题
+                        descriptionElement.textContent = descriptions[index]; // 更新描述
+                    }
+                });
+            }
+
+            function nextSlide() {
+                currentIndex = (currentIndex + 1) % slides.length;
+                showSlide(currentIndex);
+            }
+
+            function prevSlide() {
+                currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+                showSlide(currentIndex);
+            }
+
+            nextButton.addEventListener('click', nextSlide);
+            prevButton.addEventListener('click', prevSlide);
+
+            // 自动轮播
+            setInterval(nextSlide, 10000); // 每10秒切换一次
+
+            // 确保在页面加载时显示第一张图片
+            showSlide(currentIndex);
+        });
+    </script>
+</body>
+</html> 

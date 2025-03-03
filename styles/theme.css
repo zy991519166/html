@@ -1,12 +1,30 @@
-/* 主题变量和相关样式 */
+/* 主题相关的所有CSS变量和样式 */
 :root {
     --bg-gradient-start: #ffffff;
     --bg-gradient-end: #f8fafc;
-    /* ... 其他主题变量 ... */
+    --text-primary: #334155;
+    --text-secondary: #64748b;
+    --title-primary: #0f172a;
+    --title-secondary: #1e293b;
+    --title-tertiary: #334155;
+    --card-bg: rgba(255, 255, 255, 0.95);
+    --card-bg-hover: rgba(255, 255, 255, 1);
+    --card-shadow: rgba(0, 0, 0, 0.06);
+    --card-shadow-hover: rgba(0, 0, 0, 0.1);
+    --particle-opacity: 0.8;
 }
 
 [data-theme="dark"] {
     --bg-gradient-start: #000000;
     --bg-gradient-end: #111111;
-    /* ... 其他暗色主题变量 ... */
-} 
+    --text-primary: #e2e8f0;
+    --text-secondary: #cbd5e1;
+    --title-primary: #f8fafc;
+    --title-secondary: #f1f5f9;
+    --title-tertiary: #e2e8f0;
+    --card-bg: rgba(17, 17, 17, 0.95);
+    --card-bg-hover: rgba(24, 24, 27, 0.98);
+    --card-shadow: rgba(0, 0, 0, 0.3);
+    --card-shadow-hover: rgba(0, 0, 0, 0.4);
+    --particle-opacity: 0.6;
+}

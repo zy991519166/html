@@ -1,45 +1,32 @@
 class ThemeManager {
     constructor() {
+        // 使用 Proxy 监听主题变化
+        this.state = new Proxy({
+            theme: localStorage.getItem('theme') || 'light'
+        }, {
+            set: (obj, prop, value) => {
+                obj[prop] = value;
+                this.handleThemeChange(value);
+                return true;
+            }
+        });
+
         this.init();
-        this.bindEvents();
     }
 
-    init() {
-        this.elements = {
-            toggle: document.querySelector('.theme-toggle'),
-            moon: document.querySelector('.moon'),
-            sun: document.querySelector('.sun')
-        };
-        this.theme = {
-            current: localStorage.getItem('theme') || 'light',
-            urlParam: new URLSearchParams(window.location.search).get('theme')
-        };
-        
-        this.applyTheme(this.theme.urlParam || this.theme.current);
+    handleThemeChange(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        this.updateUI(theme);
+        this.updateParticles(theme);
+        this.updateLinks(theme);
     }
 
-    bindEvents() {
-        this.elements.toggle?.addEventListener('click', () => {
-            this.toggleTheme();
+    // 减少不必要的DOM操作
+    updateUI(theme) {
+        requestAnimationFrame(() => {
+            this.moonIcon.style.display = theme === 'dark' ? 'none' : 'block';
+            this.sunIcon.style.display = theme === 'dark' ? 'block' : 'none';
         });
     }
-
-    applyTheme(theme) {
-        document.documentElement.setAttribute('data-theme', theme);
-        this.updateIcons(theme);
-        localStorage.setItem('theme', theme);
-    }
-
-    updateIcons(theme) {
-        if (this.elements.moon && this.elements.sun) {
-            this.elements.moon.style.display = theme === 'dark' ? 'none' : 'block';
-            this.elements.sun.style.display = theme === 'dark' ? 'block' : 'none';
-        }
-    }
-
-    toggleTheme() {
-        const newTheme = this.theme.current === 'dark' ? 'light' : 'dark';
-        this.theme.current = newTheme;
-        this.applyTheme(newTheme);
-    }
-} 
+}

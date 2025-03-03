@@ -339,7 +339,7 @@
     
     <div class="content">
         <div class="card">
-            <h1>作品集</h1>
+            <h1> </h1>
             <p>专注于，擅长</p>
         </div>
 
@@ -350,7 +350,14 @@
                 <div>
                     <h3>Unity能力展示</h3>
                     <a href="pages/unity-effects.html">
-                        <img src="Resource/1.jpg" alt="Unity项目展示">
+                        <!-- 在 head 中添加 -->
+                        <link rel="preload" as="image" href="Resource/1.jpg">
+                        <link rel="preload" as="image" href="Resource/2.jpg">
+                        <link rel="preload" as="image" href="Resource/3.png">
+                        <link rel="preload" as="image" href="Resource/4.png">
+                        
+                        <!-- 图片添加 loading="lazy" -->
+                        <img src="Resource/1.jpg" alt="Unity项目展示" loading="lazy">
                     </a>
                     <a href="pages/unity-effects.html" class="project-link">基于Unity WebGL的项目截图展示</a>
                 </div>

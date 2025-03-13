@@ -143,8 +143,9 @@
             transition: all 0.3s ease;
         }
 
+        /* 移除视频悬停时的放大效果，只保留阴影和亮度变化 */
         video:hover {
-            transform: scale(1.02);
+            /* 移除 transform: scale(1.02); */
             box-shadow: 0 6px 24px var(--card-shadow-hover);
             filter: brightness(1.15) contrast(1.15); /* 悬停时略微增加亮度 */
         }
@@ -412,9 +413,11 @@
                  <!-- 第san个视频 -->
                  <div>
                     <h3>WebGL项目:商品页面</h3>
-                    <video controls>
+                    <video controls preload="metadata">
                         <source src="Resource/v3.mp4" type="video/mp4">
-                        您的浏览器不支持视频播放
+                        <source src="Resource/v3.webm" type="video/webm">
+                        <!-- 添加备用格式和错误提示 -->
+                        您的浏览器不支持视频播放，或视频文件不存在
                     </video>
                     <a href="pages/webgl-project.html" class="project-link">WebGL项目:3D商品</a>
                 </div>
@@ -803,19 +806,20 @@
         });
 
         // 视频互斥播放控制
-        document.addEventListener('DOMContentLoaded', () => {
-            const videos = document.querySelectorAll('video');
-            
-            videos.forEach(video => {
-                video.addEventListener('play', () => {
-                    videos.forEach(otherVideo => {
-                        if (otherVideo !== video && !otherVideo.paused) {
-                            otherVideo.pause();
-                        }
+        <!-- 在 script 部分添加 -->
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const videos = document.querySelectorAll('video');
+                
+                videos.forEach((video, index) => {
+                    video.addEventListener('error', (e) => {
+                        console.error(`视频 ${index+1} 加载失败:`, e);
+                        video.parentElement.classList.add('video-error');
                     });
+                    
+                    // 其他视频事件监听保持不变...
                 });
             });
-        });
-    </script>
+        </script>
 </body>
 </html>

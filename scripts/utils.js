@@ -21,10 +21,12 @@ function initMobileMenu() {
     const menuToggle = document.querySelector('.mobile-menu-toggle');
     const menu = document.querySelector('.navbar-menu');
 
-    menuToggle.addEventListener('click', () => {
-        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-        menuToggle.classList.toggle('active');
-    });
+    if (menuToggle && menu) {
+        menuToggle.addEventListener('click', () => {
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+            menuToggle.classList.toggle('active');
+        });
+    }
 }
 
 // 平滑滚动

@@ -49,6 +49,23 @@
             font-size: 1.8rem;
         }
 
+        .experience-link {
+            display: inline-block;
+            margin-top: 1.5rem;
+            padding: 0.8rem 1.5rem;
+            background-color: var(--accent-color);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .experience-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            background-color: var(--accent-color-hover);
+        }
         .image-gallery {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -129,6 +146,7 @@
                 <span class="tech-item">性能优化</span>
                 <span class="tech-item">工具开发</span>
             </div>
+            <a href="https://www.raydata.pro/" target="_blank" class="experience-link">立即体验平台</a>
         </section>
 
         <section class="project-section">

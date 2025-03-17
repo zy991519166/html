@@ -1,36 +1,27 @@
-class ThemeManager {
-    constructor() {
-        this.moonIcon = document.getElementById('moon-icon');
-        this.sunIcon = document.getElementById('sun-icon');
-        this.themeToggle = document.getElementById('theme-toggle');
-        
-        // Initialize theme from localStorage or default to light
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        
-        // Update UI to match current theme
-        this.updateThemeUI(savedTheme);
-        
-        // Set up event listeners
-        if (this.themeToggle) {
-            this.themeToggle.addEventListener('click', () => this.toggleTheme());
-        }
+document.addEventListener('DOMContentLoaded', () => {
+    const themeToggle = document.querySelector('.theme-toggle');
+    const body = document.body;
+    const moonIcon = themeToggle.querySelector('.moon');
+    const sunIcon = themeToggle.querySelector('.sun');
+
+    // 检查本地存储中的主题设置
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        body.classList.add('dark-theme');
+        moonIcon.style.display = 'none';
+        sunIcon.style.display = 'block';
     }
-    
-    updateThemeUI(theme) {
-        if (this.moonIcon && this.sunIcon) {
-            this.moonIcon.style.display = theme === 'dark' ? 'none' : 'block';
-            this.sunIcon.style.display = theme === 'dark' ? 'block' : 'none';
-        }
-    }
-    
-    toggleTheme() {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        
-        this.updateThemeUI(newTheme);
-    }
-}
+
+    // 切换主题
+    themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-theme');
+        const isDark = body.classList.contains('dark-theme');
+
+        // 更新图标显示
+        moonIcon.style.display = isDark ? 'none' : 'block';
+        sunIcon.style.display = isDark ? 'block' : 'none';
+
+        // 保存主题设置到本地存储
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+}));

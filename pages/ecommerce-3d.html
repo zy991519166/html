@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电商3D - 项目详情</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="../styles/common.css">
+    <link rel="stylesheet" href="../styles/components.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.8/ScrollMagic.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+</head>
+<body class="dark-theme">
+    <div id="particles-js"></div>
+    <style>
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-color: transparent;
+        }
+
+        .project-header {
+            text-align: center;
+            padding: 2rem 0;
+            margin-bottom: 3rem;
+        }
+
+        .project-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-meta {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .project-section {
+            margin-bottom: 4rem;
+        }
+
+        .project-section h2 {
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .tech-item {
+            background: var(--bg-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .challenge-card {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .challenge-card h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+    </style>
+
+    <header class="navbar">
+        <div class="container">
+            <div class="navbar-brand">
+                <h1>电商3D</h1>
+                <p>项目详情</p>
+            </div>
+            <nav class="navbar-menu">
+                <ul>
+                    <li><a href="../MyPage.html#portfolio">返回作品集</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="project-header">
+            <h1 class="project-title">电商3D展示</h1>
+            <div class="project-meta">
+                <span>2018.11 - 2019.02</span>
+            </div>
+        </div>
+
+        <section class="project-section">
+            <h2>项目概述</h2>
+            <p>为电商平台开发的3D商品展示解决方案，通过精细的3D建模和材质制作，结合交互式展示，让用户能够全方位了解商品细节，提升购物体验。</p>
+            
+            <div class="tech-stack">
+                <span class="tech-item">3D建模</span>
+                <span class="tech-item">PBR材质</span>
+                <span class="tech-item">WebGL</span>
+                <span class="tech-item">性能优化</span>
+            </div>
+        </section>
+
+        <section class="project-section">
+            <h2>效果展示</h2>
+            <div class="video-container" style="margin-bottom: 2rem;">
+                <video controls style="width: 100%; border-radius: 8px; box-shadow: var(--card-shadow);">
+                    <source src="../Resource/v3.mp4" type="video/mp4">
+                    您的浏览器不支持视频播放。
+                </video>
+            </div>
+            <div class="image-gallery">
+                <div class="gallery-item">
+                    <img src="../Resource/h5/001.jpg" alt="商品展示界面">
+                </div>
+                <div class="gallery-item">
+                    <img src="../Resource/h5/002.jpg" alt="商品细节展示">
+                </div>
+                <div class="gallery-item">
+                    <img src="../Resource/h5/003.jpg" alt="材质效果展示">
+                </div>
+                <div class="gallery-item">
+                    <img src="../Resource/h5/004.jpg" alt="交互功能展示">
+                </div>
+            </div>
+        </section>
+
+        <section class="project-section">
+            <h2>技术实现</h2>
+            <div class="challenge-card">
+                <h3>3D建模与材质</h3>
+                <p>采用专业的3D建模和材质制作流程：</p>
+                <ul>
+                    <li>使用3ds Max进行精细建模</li>
+                    <li>通过Substance Painter制作PBR材质</li>
+                    <li>优化模型结构和UV布局</li>
+                </ul>
+            </div>
+
+            <div class="challenge-card">
+                <h3>WebGL渲染优化</h3>
+                <p>针对Web平台特性进行渲染优化：</p>
+                <ul>
+                    <li>实现基于Three.js的渲染系统</li>
+                    <li>优化材质和光照效果</li>
+                    <li>实现移动端自适应渲染</li>
+                </ul>
+            </div>
+
+            <div class="challenge-card">
+                <h3>交互体验</h3>
+                <p>设计并实现直观的交互系统：</p>
+                <ul>
+                    <li>支持模型360度旋转查看</li>
+                    <li>实现商品细节放大功能</li>
+                    <li>优化触控和手势操作</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="project-section">
+            <h2>技术难点突破</h2>
+            <div class="challenge-card">
+                <h3>性能优化</h3>
+                <p>针对移动端访问特点进行优化：</p>
+                <ul>
+                    <li>实现资源的动态加载</li>
+                    <li>优化渲染性能和内存占用</li>
+                    <li>实现渐进式加载策略</li>
+                </ul>
+            </div>
+
+            <div class="challenge-card">
+                <h3>跨平台适配</h3>
+                <p>解决多平台兼容性问题：</p>
+                <ul>
+                    <li>适配不同分辨率和设备</li>
+                    <li>优化不同浏览器的渲染表现</li>
+                    <li>实现响应式布局设计</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p class="copyright">&copy; 2024 创意作品集。保留所有权利。</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../scripts/particles.js"></script>
+    <script src="../scripts/utils.js"></script>
+</body>
+</html>

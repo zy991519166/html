@@ -1,66 +1,76 @@
-/* 主题相关的所有CSS变量和样式 */
-:root {
-    --bg-gradient-start: #ffffff;
-    --bg-gradient-end: #f8fafc;
-    --text-primary: #334155;
-    --text-secondary: #64748b;
-    --title-primary: #0f172a;
-    --title-secondary: #1e293b;
-    --title-tertiary: #334155;
-    --card-bg: rgba(255, 255, 255, 0.95);
-    --card-bg-hover: rgba(255, 255, 255, 1);
-    --card-shadow: rgba(0, 0, 0, 0.06);
-    --card-shadow-hover: rgba(0, 0, 0, 0.1);
-    --particle-opacity: 0.8;
-    
-    /* 添加图片相关样式变量 */
-    --image-border: rgba(0, 0, 0, 0.1);
-    --image-shadow: rgba(0, 0, 0, 0.08);
-    --image-bg: rgba(255, 255, 255, 1);
-    --image-hover-scale: 1.05;
-    --image-transition: all 0.3s ease;
+/* 主题切换动画 */
+body {
+    transition: background-color 0.3s ease-in-out;
 }
 
-[data-theme="dark"] {
-    --bg-gradient-start: #000000;
-    --bg-gradient-end: #111111;
-    --text-primary: #e2e8f0;
-    --text-secondary: #cbd5e1;
-    --title-primary: #f8fafc;
-    --title-secondary: #f1f5f9;
-    --title-tertiary: #e2e8f0;
-    --card-bg: rgba(17, 17, 17, 0.95);
-    --card-bg-hover: rgba(24, 24, 27, 0.98);
-    --card-shadow: rgba(0, 0, 0, 0.3);
-    --card-shadow-hover: rgba(0, 0, 0, 0.4);
-    --particle-opacity: 0.6;
-    
-    /* 暗色主题下的图片样式变量 */
-    --image-border: rgba(255, 255, 255, 0.1);
-    --image-shadow: rgba(0, 0, 0, 0.3);
-    --image-bg: rgba(24, 24, 27, 0.95);
+/* 主题切换按钮动画 */
+.theme-toggle svg {
+    transition: transform 0.3s ease;
 }
 
-/* 添加图片容器和图片样式 */
-.image-container {
+.theme-toggle:hover svg {
+    transform: rotate(45deg);
+}
+
+/* 深色主题特定样式 */
+.dark-theme {
+    background-color: var(--bg-primary);
+}
+
+.dark-theme .project-card,
+.dark-theme .experiment-card {
+    background-color: var(--bg-secondary);
+}
+
+/* 粒子背景 */
+#particles-js {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    overflow: hidden;
-    border-radius: 8px;
-    border: 1px solid var(--image-border);
-    background-color: var(--image-bg);
-    box-shadow: 0 4px 6px var(--image-shadow);
-    transition: var(--image-transition);
+    z-index: -1;
+    opacity: var(--particle-opacity);
 }
 
-.image-container:hover {
-    transform: scale(var(--image-hover-scale));
-    box-shadow: 0 8px 12px var(--image-shadow);
+/* 滚动动画 */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 
-.image-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 卡片悬停效果 */
+.project-card:hover .project-image img,
+.experiment-card:hover .experiment-preview img {
+    transform: scale(1.05);
+}
+
+.project-image img,
+.experiment-preview img {
+    transition: transform 0.3s ease;
+}
+
+/* 标签悬停效果 */
+.tags span {
+    transition: background-color 0.3s ease;
+}
+
+.tags span:hover {
+    background-color: var(--text-primary);
+    color: var(--bg-primary);
+}
+
+/* 链接悬停效果 */
+.social-links a {
+    transition: transform 0.3s ease;
+}
+
+.social-links a:hover {
+    transform: translateY(-2px);
 }

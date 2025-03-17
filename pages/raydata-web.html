@@ -157,8 +157,14 @@
         <section class="project-section">
             <h2>效果展示</h2>
             <div class="video-container" style="margin-bottom: 2rem;">
-                <video controls style="width: 100%; border-radius: 8px; box-shadow: var(--card-shadow);">
-                    <source src="../Resource/nv1.mp4" type="video/mp4">
+                <video controls style="width: 100%; border-radius: 8px; box-shadow: var(--card-shadow);" 
+                       onerror="console.error('视频加载错误:', this.error);"
+                       onloadeddata="console.log('视频加载成功')"
+                       onloadstart="console.log('开始加载视频')"
+                       onsuspend="console.log('视频加载暂停')"
+                       onabort="console.log('视频加载中止')"
+                       onwaiting="console.log('视频缓冲中')">
+                    <source src="../Resource/nv1.mp4" type="video/mp4" onerror="console.error('视频源加载失败')">
                     您的浏览器不支持视频播放。
                 </video>
             </div>

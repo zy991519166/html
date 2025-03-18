@@ -157,36 +157,11 @@
         <section class="project-section">
             <h2>效果展示</h2>
             <div class="video-container" style="margin-bottom: 2rem;">
-                <div id="video-placeholder" class="video-placeholder">
-                    <button id="load-video-btn" class="load-video-btn">点击加载视频</button>
-                </div>
+                <video controls preload="none" style="width: 100%; border-radius: 8px; box-shadow: var(--card-shadow);">
+                    <source src="../Resource/nv1.mp4" type="video/mp4">
+                    您的浏览器不支持视频播放。
+                </video>
             </div>
-                
-            .video-placeholder {
-                width: 100%;
-                min-height: 300px;
-                background: var(--bg-secondary);
-                border-radius: 8px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .load-video-btn {
-                padding: 1rem 2rem;
-                background: var(--accent-color);
-                border: none;
-                border-radius: 6px;
-                color: var(--text-primary);
-                cursor: pointer;
-                font-size: 1rem;
-                transition: all 0.3s ease;
-            }
-
-            .load-video-btn:hover {
-                background: var(--accent-color-hover);
-                transform: translateY(-2px);
-            }
                 
             <div class="image-gallery">
                 <div class="gallery-item">
@@ -304,24 +279,5 @@
 
     <script src="../scripts/particles.js"></script>
     <script src="../scripts/utils.js"></script>
-    <script>
-            document.getElementById('load-video-btn').addEventListener('click', function() {
-                const videoContainer = document.getElementById('video-placeholder');
-                const video = document.createElement('video');
-                video.controls = true;
-                video.preload = 'none';
-                video.style.width = '100%';
-                video.style.borderRadius = '8px';
-                video.style.boxShadow = 'var(--card-shadow)';
-
-                const source = document.createElement('source');
-                source.src = '../Resource/nv1.mp4';
-                source.type = 'video/mp4';
-
-                video.appendChild(source);
-                videoContainer.innerHTML = '';
-                videoContainer.appendChild(video);
-            });
-        </script>
 </body>
 </html>

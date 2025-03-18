@@ -226,6 +226,7 @@ body {
     overflow: hidden;
     box-shadow: var(--card-shadow);
     transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
 }
 
 .project-card:hover, .experiment-card:hover {

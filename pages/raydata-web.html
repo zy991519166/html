@@ -214,23 +214,18 @@
 
         <section class="project-section">
             <h2>技术实现</h2>
-            <div class="challenge-card">
-                <h3>Unity WebGL优化</h3>
-                <p>针对Web平台特性，实现了资源动态加载系统，优化了内存占用和加载性能：</p>
-                <ul>
-                    <li>设计并实现了基于StreamingAssets的资源加载方案</li>
-                    <li>优化了模型LOD系统，实现了基于视距的动态细节调整</li>
-                    <li>开发了异步加载管理器，提升了资源加载效率</li>
-                </ul>
-            </div>
-
+            
             <div class="challenge-card">
                 <h3>Shader定制开发</h3>
                 <p>为满足不同材质效果需求，开发了一系列自定义Shader：</p>
                 <ul>
                     <li>实现了PBR材质系统，支持多种材质预设</li>
-                    <li>开发了基于URP的自定义渲染管线</li>
+                    <li>对接开发人员为用户提供了数百项可调参数</li>
+                    <li>实现了多个自定义后处理效果</li>
+                    <li>针对gltf及fbx的材质参数进行了匹配与修改</li>
+                    <li>为方便内部人员使用设计了CustomGUI</li>
                     <li>优化了移动端的渲染性能</li>
+                    <li>由Buildin渲染管线迁移至URP</li>
                 </ul>
             </div>
 
@@ -238,11 +233,11 @@
                 <h3>工具链开发</h3>
                 <p>设计并实现了完整的工具链，提升开发效率：</p>
                 <ul>
-                    <li>开发了场景资产管理工具</li>
-                    <li>实现了材质快速预览系统</li>
+                    <li>开发了预制体通用处理工具</li>
                     <li>设计了自动化的资源处理流程</li>
                 </ul>
             </div>
+            
         </section>
 
         <section class="project-section">
@@ -251,19 +246,18 @@
                 <h3>性能优化</h3>
                 <p>通过多层次的优化策略，显著提升了平台性能：</p>
                 <ul>
-                    <li>实现了基于WebAssembly的性能优化</li>
-                    <li>优化了内存管理和GC策略</li>
-                    <li>实现了动态批处理系统</li>
+                    <li>通过Shader关键字减少了一定的计算量</li>
+                    <li>制作层面多种贴图合并来减少了采样</li>
+                    <li>通过定义MaterialPropertyBlock来对场景中大量需要调整的物体赋值</li>
                 </ul>
             </div>
 
             <div class="challenge-card">
-                <h3>跨平台兼容</h3>
-                <p>解决了各种浏览器兼容性问题：</p>
+                <h3>移动端适配</h3>
+                <p>针对移动端设备进行了优化，确保平台在各种设备上都能提供良好的用户体验：</p>
                 <ul>
-                    <li>统一了不同浏览器的渲染表现</li>
-                    <li>优化了触控设备的交互体验</li>
-                    <li>实现了响应式UI系统</li>
+                    <li>优化了移动端的渲染性能</li>
+                    <li>针对移动端的特殊需求进行了适配</li>
                 </ul>
             </div>
         </section>
@@ -272,7 +266,7 @@
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <p class="copyright">&copy; 2024 创意作品集。保留所有权利。</p>
+                <p class="copyright">&copy; 2025 个人简历。保留所有权利。</p>
             </div>
         </div>
     </footer>

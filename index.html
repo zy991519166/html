@@ -1,842 +1,308 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RayDataWeb 开发展示 - 你的名字</title>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <title>创意开发者作品集</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="styles/common.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.8/ScrollMagic.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+</head>
+<body class="dark-theme">
+    <div id="particles-js"></div>
     <style>
-        :root {
-            --bg-gradient-start: #ffffff;
-            --bg-gradient-end: #f8fafc;
-            --text-primary: #334155;
-            --text-secondary: #64748b;
-            --title-primary: #0f172a;
-            --title-secondary: #1e293b;
-            --title-tertiary: #334155;
-            --card-bg: rgba(255, 255, 255, 0.95);
-            --card-bg-hover: rgba(255, 255, 255, 1);
-            --card-shadow: rgba(0, 0, 0, 0.06);
-            --card-shadow-hover: rgba(0, 0, 0, 0.1);
-            --particle-opacity: 0.8;
-        }
-
-        /* 主题切换按钮样式 */
-        .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            background: var(--card-bg);
-            border: none;
-            border-radius: 50%;
-            width: 48px;
-            height: 48px;
-            cursor: pointer;
-            box-shadow: 0 2px 8px var(--card-shadow);
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0.9;                 /* 稍微透明 */
-        }
-
-        .theme-toggle:hover {
-            opacity: 1;
-            transform: scale(1.1);
-            background: var(--card-bg-hover);
-            box-shadow: 0 4px 12px var(--card-shadow-hover);
-        }
-
-        .theme-toggle svg {
-            width: 22px;                  /* 稍微调小图标 */
-            height: 22px;
-            fill: var(--text-primary);
-        }
-
-        /* 更新现有样式以使用CSS变量 */
-        body {
-            font-family: 'Arial', sans-serif;
-            overflow-x: hidden;
-            color: var(--text-primary);
-        }
-
-        #canvas-container {
+        #particles-js {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: -1;
-            background: linear-gradient(45deg, var(--bg-gradient-start), var(--bg-gradient-end));
-            pointer-events: auto; /* 默认允许事件 */
-        }
-
-        #particles-js {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .content {
-            position: relative;
-            padding: 10px;
-            max-width: 1200px;
-            margin: 0 auto;
-            z-index: 1; /* 确保内容在画布之上 */
-            pointer-events: auto; /* 确保内容可以接收事件 */
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .card {
-            width: calc(100% - 20px);
-            margin: 10px auto;
-            padding: 15px;
-            box-sizing: border-box;
-            background: rgba(255, 255, 255, 0.25);  /* 统一浅色模式的透明度 */
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            border-radius: 15px;
-            box-shadow: 0 4px 20px var(--card-shadow);
-            transition: all 0.3s ease;
-        }
-
-        .card:hover {
-            background: rgba(255, 255, 255, 0.35);  /* 统一悬停时的透明度 */
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 24px var(--card-shadow-hover);
-        }
-
-        /* 深色模式下的卡片样式 */
-        [data-theme="dark"] .card {
-            background: rgba(17, 17, 17, 0.25);  /* 与浅色模式保持一致的透明度 */
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-        }
-
-        [data-theme="dark"] .card:hover {
-            background: rgba(17, 17, 17, 0.35);  /* 与浅色模式保持一致的透明度 */
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-        }
-
-        /* 优化视频样式 */
-        video {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 8px;
-            box-shadow: 0 4px 16px var(--card-shadow);
-            background: transparent;
-            transition: all 0.3s ease;
-        }
-
-        /* 移除视频悬停时的放大效果，只保留阴影和亮度变化 */
-        video:hover {
-            /* 移除 transform: scale(1.02); */
-            box-shadow: 0 6px 24px var(--card-shadow-hover);
-            filter: brightness(1.15) contrast(1.15); /* 悬停时略微增加亮度 */
-        }
-
-        /* 优化视频控件样式 */
-        video::-webkit-media-controls {
-            background-color: transparent !important; /* 强制移除控件背景 */
-            border-radius: 0 0 8px 8px;
-        }
-
-        video::-webkit-media-controls-panel {
-            background-color: transparent !important; /* 强制移除面板背景 */
-        }
-
-        video::-webkit-media-controls-play-button {
-            filter: brightness(1.2); /* 增加播放按钮亮度 */
-        }
-
-        /* 确保视频在深色模式下也清晰可见 */
-        [data-theme="dark"] video {
-            filter: brightness(1.2) contrast(1.15); /* 深色模式下更高的亮度 */
-        }
-
-        [data-theme="dark"] video:hover {
-            filter: brightness(1.25) contrast(1.2);
-        }
-
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: var(--title-primary);
-            text-shadow: none;            /* 移除文字阴影使其更清爽 */
-            font-weight: 600;             /* 稍微加粗 */
-            letter-spacing: -0.5px;       /* 稍微收紧字间距 */
-        }
-
-        h2 {
-            color: var(--title-secondary);
-            margin: 1.5rem 0;
-            font-weight: 500;             /* 适中的字重 */
-            letter-spacing: -0.3px;
-        }
-
-        h3 {
-            color: var(--title-tertiary);
-            margin: 1rem 0;
-            font-weight: 500;
-            font-size: 1.25rem;           /* 调整小标题大小 */
-        }
-
-        p {
-            color: var(--text-secondary);
-            line-height: 1.7;             /* 增加行高提高可读性 */
-            font-size: 1rem;              /* 确保正文字体大小合适 */
-            margin: 0.75rem 0;            /* 调整段落间距 */
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .grid > div {
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        img {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 8px;
-            box-shadow: 0 4px 16px var(--card-shadow);
-            transition: transform 0.3s;
-        }
-
-        img:hover {
-            transform: scale(1.03);
-            box-shadow: 0 6px 24px var(--card-shadow-hover);
-        }
-
-        /* 修改遮罩层和图片的样式 */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            cursor: pointer;
-            backdrop-filter: blur(5px);
-            pointer-events: auto;
-        }
-
-        .modal-image {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            max-width: 90%;
-            max-height: 90vh;
-            border-radius: 8px;
-            box-shadow: 0 4px 32px rgba(0, 0, 0, 0.5);
-            transition: all 0.3s ease;
-            z-index: 1001;
-        }
-
-        /* 添加链接样式 */
-        .project-link {
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            position: relative;
-            display: inline-block;
-        }
-
-        .project-link:hover {
-            color: var(--title-primary);
-            transform: translateX(5px);
-        }
-
-        .project-link::after {
-            content: ' →';
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .project-link:hover::after {
-            opacity: 1;
-        }
-
-        /* 移动端适配 */
-        @media (max-width: 768px) {
-            .content {
-                padding: 5px;
-            }
-
-            .card {
-                width: calc(100% - 10px);
-                margin: 5px auto;
-                padding: 10px;
-            }
-
-            .grid {
-                gap: 10px;
-            }
-
-            h1 { font-size: 1.5rem; }
-            h2 { font-size: 1.2rem; }
-            h3 { font-size: 1rem; }
-            p { font-size: 0.9rem; }
-        }
-
-        /* 超小屏幕适配 */
-        @media (max-width: 480px) {
-            .content {
-                padding: 3px;
-            }
-
-            .card {
-                width: calc(100% - 6px);
-                margin: 3px auto;
-                padding: 8px;
-            }
-
-            .grid {
-                grid-template-columns: 1fr;
-                gap: 8px;
-            }
+            background-color: transparent;
         }
     </style>
-</head>
-<body>
-    <!-- 导航栏 -->
-    <nav class="navbar">
+    <!-- 固定导航栏 -->
+    <header class="navbar">
         <div class="container">
             <div class="navbar-brand">
-                <h1>RayDataWeb</h1>
-                <p>开发展示</p>
+                <h1>张三</h1>
+                <p>创意开发者</p>
             </div>
-            <div class="navbar-menu">
+            <nav class="navbar-menu">
                 <ul>
-                    <li><a href="#">首页</a></li>
-                    <li><a href="#projects">项目</a></li>
-                    <li><a href="#contact">联系</a></li>
+                    <li><a href="#skills">个人优势</a></li>
+                    <li><a href="#work">工作经历</a></li>
+                    <li><a href="#portfolio">作品集</a></li>
+                    <li><a href="#lab">实验室</a></li>
                 </ul>
-            </div>
-            <div class="navbar-buttons">
-                <button class="nav-button primary">登录</button>
-                <button class="nav-button secondary">注册</button>
-            </div>
+            </nav>
+            <button class="mobile-menu-toggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
         </div>
-    </nav>
+    </header>
 
-
-            <path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z"/>
-        </svg>
-        <!-- 太阳图标 (浅色模式) -->
-        <svg class="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="display: none;">
-            <path d="M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0 c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2 c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1 S11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0 s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06 c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41 c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36 c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"/>
-        </svg>
-    </button>
-
-    <div id="canvas-container">
-        <div id="particles-js"></div>
-    </div>
-    
-    <div class="content">
-        <div class="card">
-            <h1> </h1>
-            <p>专注于，擅长</p>
-        </div>
-
-        <div class="card">
-            <h2>🎨 作品展示</h2>
-            <div class="grid">
-                <!-- 第一个图片 -->
-                <div>
-                    <h3>Unity能力展示</h3>
-                    <a href="pages/unity-effects.html">
-                        <!-- 在 head 中添加 -->
-                        <link rel="preload" as="image" href="Resource/1.jpg">
-                        <link rel="preload" as="image" href="Resource/2.jpg">
-                        <link rel="preload" as="image" href="Resource/3.png">
-                        <link rel="preload" as="image" href="Resource/4.png">
-                        
-                        <!-- 图片添加 loading="lazy" -->
-                        <img src="Resource/1.jpg" alt="Unity项目展示" loading="lazy">
-                    </a>
-                    <a href="pages/unity-effects.html" class="project-link">基于Unity WebGL的项目截图展示</a>
-                </div>
-                <!-- 第二个图片 -->
-                <div>
-                    <h3>项目截图</h3>
-                    <a href="pages/screencap-gallery.html">
-                        <img src="Resource/2.jpg" alt="RayData截图展示">
-                    </a>
-                    <a href="pages/screencap-gallery.html" class="project-link">基于Unity WebGL的截图展示</a>
-                </div>
-                <!-- 第三个图片 -->
-                <div>
-                    <h3>Unity Shader能力展示</h3>
-                    <a href="pages/shader-gallery.html">
-                        <img src="Resource/3.png" alt="Unity Shader展示">
-                    </a>
-                    <a href="pages/shader-gallery.html" class="project-link">基于默认渲染管线及URP的Shader展示</a>
-                </div>
-                <!-- 第四个图片 -->
-                <div>
-                    <h3>3DMax能力展示</h3>
-                    <a href="pages/3dmax-gallery.html">
-                        <img src="Resource/4.png" alt="3DMax能力展示">
-                    </a>
-                    <a href="pages/3dmax-gallery.html" class="project-link">基于3DMax的能力展示</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <h2>🎬 视频演示</h2>
-            <div class="grid">
-                <!-- 第一个视频 -->
-                <div>
-                    <h3>RayDataWeb项目录屏</h3>
-                    <video controls>
-                        <source src="Resource/nv1.mp4" type="video/mp4">
-                        您的浏览器不支持视频播放
-                    </video>
-                    <a href="pages/RayDataWeb.html" class="project-link">RayDataWeb项目录屏</a>
-                </div>
-                <!-- 第二个视频 -->
-                <div>
-                    <h3>WebGL项目:国家宝藏</h3>
-                    <video controls>
-                        <source src="Resource/nv2.mp4" type="video/mp4">
-                        您的浏览器不支持视频播放
-                    </video>
-                    <a href="pages/webgl-project.html" class="project-link">WebGL项目:国家宝藏小程序</a>
-                </div>
-                 <!-- 第san个视频 -->
-                 <div>
-                    <h3>WebGL项目:商品页面</h3>
-                    <video controls preload="metadata">
-                        <source src="Resource/nv3.mp4" type="video/mp4">
-                        <source src="Resource/v3.webm" type="video/webm">
-                        <!-- 添加备用格式和错误提示 -->
-                        您的浏览器不支持视频播放，或视频文件不存在
-                    </video>
-                    <a href="pages/webgl-project.html" class="project-link">WebGL项目:3D商品</a>
+    <main>
+        <!-- 个人优势 -->
+        <section id="skills" class="section skills-section">
+            <div class="container">
+                <h2>个人优势</h2>
+                <div class="skills-grid">
+                    <div class="skill-card">
+                        <h3>Unity引擎专精</h3>
+                        <p>精通Unity引擎材质/粒子/灯光/着色器渲染管线，擅长光照烘焙与全局光照方案实施</p>
+                        <div class="tags">
+                            <span>Unity</span>
+                            <span>渲染管线</span>
+                            <span>光照烘焙</span>
+                        </div>
+                    </div>
+                    <div class="skill-card">
+                        <h3>Shader开发</h3>
+                        <p>熟练使用ShaderGraph/ASE进行着色器开发，具备自定义Shader代码优化经验</p>
+                        <div class="tags">
+                            <span>ShaderLab</span>
+                            <span>ShaderGraph</span>
+                            <span>ASE</span>
+                            <span>性能优化</span>
+                        </div>
+                    </div>
+                    <div class="skill-card">
+                        <h3>移动端3D</h3>
+                        <p>掌握ThreeJS/PlayCanvas引擎特性，擅长移动端浏览器渲染优化</p>
+                        <div class="tags">
+                            <span>ThreeJS</span>
+                            <span>PlayCanvas</span>
+                            <span>移动端优化</span>
+                        </div>
+                    </div>
+                    <div class="skill-card">
+                        <h3>3D制作</h3>
+                        <p>熟练使用3ds Max建模与Substance Painter PBR材质制作</p>
+                        <div class="tags">
+                            <span>3ds Max</span>
+                            <span>UV</span>
+                            <span>Substance Painter</span>
+                            <span>PBR材质</span>
+                        </div>
+                    </div>
+                    <div class="skill-card">
+                        <h3>性能优化</h3>
+                        <p>精通烘焙资源管理与光照贴图内存优化，掌握常用的性能优化技术与方法</p>
+                        <div class="tags">
+                            <span>资源管理</span>
+                            <span>内存优化</span>
+                            <span>性能分析</span>
+                        </div>
+                    </div>
+                    <div class="skill-card">
+                        <h3>团队协作</h3>
+                        <p>具备跨部门沟通协调经验，擅长制定资源交付标准与技术文档编写</p>
+                        <div class="tags">
+                            <span>项目管理</span>
+                            <span>文档编写</span>
+                            <span>团队协作</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </section>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+        <!-- 工作经历 -->
+        <section id="work" class="section work-section">
+            <div class="container">
+                <h2>工作经历</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h3>技术美术</h3>
+                            <p class="company">北京光启元数字科技有限公司</p>
+                            <p class="period">2019.10 - 至今</p>
+                            <p class="description">负责平台场景资产规划制作，开发优化Shader，解决性能瓶颈，协助开发工具脚本提效。</p>
+                            <ul class="achievements">
+                                <li>参与平台场景资产规划和制作，确保视觉表现与性能的平衡</li>
+                                <li>在Unity Buildin管线和URP下编写高效Shader，实现复杂的动态光影效果</li>
+                                <li>分析并优化web浏览器场景性能，解决资源使用、渲染效率等问题</li>
+                                <li>开发工具和脚本，建立资产生产管线，提高团队工作效率</li>
+                                <li>与产品、开发和美术团队紧密合作，确保场景效果符合产品需求和技术限制，对出现的bug及时定位并解决问题</li>
+                            </ul>
+                            <div class="tags">
+                                <span>Unity</span>
+                                <span>Shader开发</span>
+                                <span>性能优化</span>
+                                <span>工具开发</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h3>U3D美术</h3>
+                            <p class="company">微展世(北京)数字科技有限公司</p>
+                            <p class="period">2018.04 - 2019.10</p>
+                            <p class="description">负责Unity与网页端项目的美术与程序对接，进行场景优化与效果制作。</p>
+                            <ul class="achievements">
+                                <li>负责Unity项目灯光、材质调节、效率优化及场景烘焙</li>
+                                <li>进行低模制作、高模化简，控制模型面数，提升运行性能</li>
+                                <li>制作PBR材质贴图，还原物体物理属性</li>
+                                <li>优化项目资源，确保手机端快速加载、流畅运行</li>
+                            </ul>
+                            <div class="tags">
+                                <span>Unity3D</span>
+                                <span>场景优化</span>
+                                <span>PBR材质</span>
+                                <span>移动端优化</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h3>3D设计师</h3>
+                            <p class="company">润尼尔软件科技有限公司</p>
+                            <p class="period">2015.07 - 2018.03</p>
+                            <p class="description">负责全流程3D资产开发，包括模型制作、材质设计和场景搭建。</p>
+                            <ul class="achievements">
+                                <li>使用3Ds Max制作Unity及WebGL所需模型，进行高模烘焙法线</li>
+                                <li>使用Substance制作材质贴图，开发特殊需求Shader</li>
+                                <li>在场景中布置灯光烘托氛围，烘焙静态光照</li>
+                                <li>协调美术与程序问题，提供解决方案和优化方向</li>
+                            </ul>
+                            <div class="tags">
+                                <span>3Ds Max</span>
+                                <span>Substance</span>
+                                <span>Shader开发</span>
+                                <span>场景优化</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 作品集 -->
+        <section id="portfolio" class="section portfolio-section">
+            <div class="container">
+                <h2>精选项目</h2>
+                <div class="project-grid">                    
+                    <article class="project-card" onclick="window.location.href='pages/raydata-web.html'">
+                        <div class="project-image">
+                            <img src="Resource/1.jpg" alt="RayDataWeb平台" loading="lazy">
+                        </div>
+                        <div class="project-content">
+                            <h3>RayDataWeb数字李生可视化平台</h3>
+                            <p class="company">2019.12 - 至今</p>
+                            <p class="description">基于Unity开发的数字李生可视化网页编辑器，提供多种3D资源和在线3D模型编辑工具。</p>
+                            <ul class="achievements">
+                                <li>参与平台场景资产规划制作，平衡艺术与性能表现</li>
+                                <li>在Unity内置管线及URP下编写优化Shader</li>
+                                <li>分析并优化web浏览器场景性能，解决各类性能瓶颈</li>
+                                <li>协助开发工具脚本，制定优化场景制作规范流程</li>
+                                <li>跨部门协作，对出现的bug及时定位并解决问题</li>
+                            </ul>
+                            <div class="tags">
+                                <span>Unity</span>
+                                <span>Shader开发</span>
+                                <span>性能优化</span>
+                                <span>工具开发</span>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="project-card" onclick="window.location.href='pages/national-treasure.html'">
+                        <div class="project-image">
+                            <img src="Resource/gb.jpg" alt="国宝微展示" loading="lazy">
+                        </div>
+                        <div class="project-content">
+                            <h3>国家宝藏</h3>
+                            <p class="company">2018.11 - 2019.02</p>
+                            <p class="description">与国家宝藏栏目组联合开发的微信小程序，用户通过扫描节目二维码即可查看超写实的3D文物模型及历史背景。</p>
+                            <ul class="achievements">
+                                <li>完成文物的3D建模，通过骨骼动画实现文物细节动态展示</li>
+                                <li>使用Substance Painter制作高分辨率PBR材质贴图</li>
+                                <li>优化项目性能，使单个项目打开时间小于5秒，包体小于10M</li>
+                                <li>使用V-Ray完成文物AO烘焙，保证实时渲染效果</li>
+                                <li>通过自定义Shader Chunk实现文物特殊表现效果</li>
+                            </ul>
+                            <div class="tags">
+                                <span>3D建模</span>
+                                <span>PBR</span>
+                                <span>性能优化</span>
+                                <span>V-Ray</span>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="project-card" onclick="window.location.href='pages/ecommerce-3d.html'">
+                        <div class="project-image">
+                            <img src="Resource/3.png" alt="电商3D" loading="lazy">
+                        </div>
+                        <div class="project-content">
+                            <h3>电商3D</h3>
+                            <p class="company">2018.11 - 2019.02</p>
+                            <p class="description">电商模型3D展示，通过各种方式来表现商品的功能及质感。</p>
+                            <ul class="achievements">
+                                <li>使用Substance Painter制作高分辨率PBR材质</li>
+                                <li>优化项目性能</li>
+                                <li>保证实时渲染效果</li>
+                            </ul>
+                            <div class="tags">
+                                <span>3D建模</span>
+                                <span>PBR</span>
+                                <span>性能优化</span>
+                                <span>V-Ray</span>
+                            </div>
+                        </div>
+                    </article>
+                    <!-- More project cards... -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 实验室 -->
+        <section id="lab" class="section lab-section">
+            <div class="container">
+                <h2>实验室项目</h2>
+                <div class="experiment-grid">
+                    <article class="experiment-card">
+                        <div class="experiment-preview">
+                            <img src="Resource/shader1.png" alt="篝火实验" loading="lazy">
+                        </div>
+                        <div class="experiment-content">
+                            <h3>篝火</h3>
+                            <p class="description">使用自定义GLSL着色器的实时火焰模拟。</p>
+                            <div class="tags">
+                                <span>WebGL</span>
+                                <span>GLSL</span>
+                                <span>Three.js</span>
+                            </div>
+                        </div>
+                    </article>
+                    <!-- More experiment cards... -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="social-links">
+                    <a href="https://linkedin.com" target="_blank" rel="noopener">
+                        <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path></svg>
+                        LinkedIn
+                    </a>
+                    <a href="https://github.com" target="_blank" rel="noopener">
+                        <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                        GitHub
+                    </a>
+                </div>
+                <p class="copyright">&copy; 2024 创意作品集。保留所有权利。</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="scripts/utils.js"></script>
     <script src="scripts/particles.js"></script>
-    <script>
-        class ParticleBackground {
-            constructor() {
-                this.container = document.querySelector('#canvas-container');
-                this.mouse = new THREE.Vector2(0, 0);
-                this.mousePosition = new THREE.Vector3();
-                this.currentShape = 'square';
-                this.currentSize = 1.0;
-                this.scene = null;
-                this.camera = null;
-                this.renderer = null;
-                this.particles = null;
-                this.initThree();
-                this.createParticles();
-                this.addEventListeners();
-                this.animate();
-            }
-
-            clearParticles() {
-                if (this.particles) {
-                    // 移除现有的粒子
-                    this.scene.remove(this.particles);
-                    // 释放内存
-                    this.particles.geometry.dispose();
-                    this.particles.material.dispose();
-                    if (this.particles.material.map) {
-                        this.particles.material.map.dispose();
-                    }
-                    this.particles = null;
-                }
-            }
-
-            recreateParticles() {
-                // 清除现有粒子
-                this.clearParticles();
-                // 创建新粒子
-                this.createParticles();
-            }
-
-            initThree() {
-                this.scene = new THREE.Scene();
-                this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-                this.renderer = new THREE.WebGLRenderer({ alpha: true });
-                this.renderer.setSize(window.innerWidth, window.innerHeight);
-                this.container.appendChild(this.renderer.domElement);
-                this.camera.position.z = 50;
-            }
-
-            createParticles() {
-                const geometry = new THREE.BufferGeometry();
-                const vertices = [];
-                const colors = [];
-                const particleCount = 5000;
-                
-                this.originalPositions = new Float32Array(particleCount * 3);
-
-                // 获取当前主题
-                const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
-                
-                for (let i = 0; i < particleCount; i++) {
-                    const x = (Math.random() - 0.5) * 100;
-                    const y = (Math.random() - 0.5) * 100;
-                    const z = (Math.random() - 0.5) * 50;
-
-                    vertices.push(x, y, z);
-                    this.originalPositions[i * 3] = x;
-                    this.originalPositions[i * 3 + 1] = y;
-                    this.originalPositions[i * 3 + 2] = z;
-
-                    if (isDarkMode) {
-                        // 深色模式的粒子颜色
-                        colors.push(
-                            0.4 + Math.random() * 0.2,  // R
-                            0.5 + Math.random() * 0.3,  // G
-                            0.7 + Math.random() * 0.3   // B
-                        );
-                    } else {
-                        // 浅色模式的粒子颜色 - 调整为更深的蓝色
-                        colors.push(
-                            0.2 + Math.random() * 0.2,  // R - 降低红色分量
-                            0.3 + Math.random() * 0.3,  // G - 增加绿色分量
-                            0.6 + Math.random() * 0.4   // B - 显著增加蓝色分量
-                        );
-                    }
-                }
-
-                geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-                geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-
-                const particleOpacity = isDarkMode ? 0.6 : 0.85; // 增加浅色模式下的不透明度
-
-                this.material = new THREE.PointsMaterial({
-                    size: this.currentSize,
-                    vertexColors: true,
-                    transparent: true,
-                    opacity: particleOpacity,
-                    map: this.createSquareTexture(),
-                    depthWrite: false,
-                    depthTest: false,
-                    blending: THREE.AdditiveBlending,
-                    alphaTest: 0.01
-                });
-
-                this.particles = new THREE.Points(geometry, this.material);
-                this.scene.add(this.particles);
-            }
-
-            createSquareTexture() {
-                const canvas = document.createElement('canvas');
-                canvas.width = 128;
-                canvas.height = 128;
-                const ctx = canvas.getContext('2d');
-                
-                const gradient = ctx.createRadialGradient(
-                    64, 64, 0,
-                    64, 64, 32
-                );
-                
-                // 增加渐变对比度
-                gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-                gradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.5)');
-                gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-                
-                ctx.fillStyle = gradient;
-                ctx.fillRect(0, 0, 128, 128);
-                
-                const texture = new THREE.Texture(canvas);
-                texture.needsUpdate = true;
-                return texture;
-            }
-
-            createCircleTexture() {
-                const canvas = document.createElement('canvas');
-                canvas.width = 128;
-                canvas.height = 128;
-                const ctx = canvas.getContext('2d');
-                
-                const gradient = ctx.createRadialGradient(
-                    64, 64, 0,
-                    64, 64, 32
-                );
-                
-                gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-                gradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.5)');
-                gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-                
-                ctx.beginPath();
-                ctx.arc(64, 64, 32, 0, Math.PI * 2);
-                ctx.fillStyle = gradient;
-                ctx.fill();
-                
-                const texture = new THREE.Texture(canvas);
-                texture.needsUpdate = true;
-                return texture;
-            }
-
-            createTriangleTexture() {
-                const canvas = document.createElement('canvas');
-                canvas.width = 128;
-                canvas.height = 128;
-                const ctx = canvas.getContext('2d');
-                
-                const gradient = ctx.createRadialGradient(
-                    64, 64, 0,
-                    64, 64, 32
-                );
-                
-                gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-                gradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.5)');
-                gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-                
-                ctx.beginPath();
-                ctx.moveTo(64, 32);
-                ctx.lineTo(96, 96);
-                ctx.lineTo(32, 96);
-                ctx.closePath();
-                ctx.fillStyle = gradient;
-                ctx.fill();
-                
-                const texture = new THREE.Texture(canvas);
-                texture.needsUpdate = true;
-                return texture;
-            }
-
-            addEventListeners() {
-                window.addEventListener('mousemove', (e) => {
-                    this.updateMousePosition(e.clientX, e.clientY);
-                });
-
-                window.addEventListener('touchmove', (e) => {
-                    if (e.touches.length > 0) {
-                        const touch = e.touches[0];
-                        this.updateMousePosition(touch.clientX, touch.clientY);
-                    }
-                });
-
-                window.addEventListener('resize', () => {
-                    this.camera.aspect = window.innerWidth / window.innerHeight;
-                    this.camera.updateProjectionMatrix();
-                    this.renderer.setSize(window.innerWidth, window.innerHeight);
-                });
-            }
-
-            updateMousePosition(x, y) {
-                this.mouse.x = (x / window.innerWidth) * 2 - 1;
-                this.mouse.y = -(y / window.innerHeight) * 2 + 1;
-
-                this.mousePosition.set(
-                    this.mouse.x * 50,
-                    this.mouse.y * 50,
-                    0
-                );
-
-                // 根据水平位置更新形状
-                const horizontalPosition = x / window.innerWidth;
-                this.updateShapeByPosition(horizontalPosition);
-
-                // 根据垂直位置更新大小
-                const verticalPosition = y / window.innerHeight;
-                this.updateSizeByPosition(verticalPosition);
-            }
-
-            updateShapeByPosition(horizontalPosition) {
-                let newShape;
-                if (horizontalPosition < 1/3) {
-                    newShape = 'triangle';
-                } else if (horizontalPosition < 2/3) {
-                    newShape = 'square';
-                } else {
-                    newShape = 'circle';
-                }
-
-                if (this.currentShape !== newShape) {
-                    this.currentShape = newShape;
-                    switch(newShape) {
-                        case 'triangle':
-                            this.material.map = this.createTriangleTexture();
-                            break;
-                        case 'square':
-                            this.material.map = this.createSquareTexture();
-                            break;
-                        case 'circle':
-                            this.material.map = this.createCircleTexture();
-                            break;
-                    }
-                    this.material.needsUpdate = true;
-                }
-            }
-
-            updateSizeByPosition(verticalPosition) {
-                // 大小范围从 0.5 到 2.0
-                const newSize = 0.5 + (verticalPosition * 1.5);
-                if (this.currentSize !== newSize) {
-                    this.currentSize = newSize;
-                    this.material.size = newSize;
-                    this.material.needsUpdate = true;
-                }
-            }
-
-            animate() {
-                requestAnimationFrame(() => this.animate());
-
-                const positions = this.particles.geometry.attributes.position.array;
-                const time = Date.now() * 0.0005;
-
-                for (let i = 0; i < positions.length; i += 3) {
-                    const originalX = this.originalPositions[i];
-                    const originalY = this.originalPositions[i + 1];
-                    const originalZ = this.originalPositions[i + 2];
-
-                    const dx = positions[i] - this.mousePosition.x;
-                    const dy = positions[i + 1] - this.mousePosition.y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-
-                    const repelFactor = Math.min(40 / (distance + 0.1), 0.8);
-
-                    positions[i] = originalX + 
-                        Math.sin(time + i * 0.1) * 0.4 +
-                        dx * repelFactor;
-
-                    positions[i + 1] = originalY + 
-                        Math.cos(time + i * 0.1) * 0.4 +
-                        dy * repelFactor;
-
-                    positions[i + 2] = originalZ + 
-                        Math.sin(time + i * 0.1) * 0.4;
-                }
-
-                this.particles.geometry.attributes.position.needsUpdate = true;
-                this.renderer.render(this.scene, this.camera);
-            }
-        }
-
-        // 添加主题切换功能
-        class ThemeManager {
-            constructor() {
-                this.themeToggle = document.querySelector('.theme-toggle');
-                this.moonIcon = document.querySelector('.moon');
-                this.sunIcon = document.querySelector('.sun');
-                this.isDark = false;
-                this.particleBackground = null;
-                
-                // 检查URL参数中的主题设置
-                const urlParams = new URLSearchParams(window.location.search);
-                const themeParam = urlParams.get('theme');
-                const savedTheme = localStorage.getItem('theme');
-                
-                // 优先使用URL参数的主题设置，其次使用本地存储的设置
-                if (themeParam === 'dark' || (!themeParam && savedTheme === 'dark')) {
-                    this.enableDarkMode();
-                }
-
-                this.addEventListeners();
-            }
-
-            setParticleBackground(pb) {
-                this.particleBackground = pb;
-            }
-
-            enableDarkMode() {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                this.moonIcon.style.display = 'none';
-                this.sunIcon.style.display = 'block';
-                this.isDark = true;
-                localStorage.setItem('theme', 'dark');
-                
-                // 重新创建粒子
-                if (this.particleBackground) {
-                    this.particleBackground.recreateParticles();
-                }
-                // 更新所有链接的URL
-                this.updateLinksTheme('dark');
-            }
-
-            enableLightMode() {
-                document.documentElement.setAttribute('data-theme', 'light');
-                this.moonIcon.style.display = 'block';
-                this.sunIcon.style.display = 'none';
-                this.isDark = false;
-                localStorage.setItem('theme', 'light');
-                
-                // 重新创建粒子
-                if (this.particleBackground) {
-                    this.particleBackground.recreateParticles();
-                }
-                // 更新所有链接的URL
-                this.updateLinksTheme('light');
-            }
-
-            addEventListeners() {
-                this.themeToggle.addEventListener('click', () => {
-                    if (this.isDark) {
-                        this.enableLightMode();
-                    } else {
-                        this.enableDarkMode();
-                    }
-                });
-            }
-
-            // 添加新方法：更新所有链接的主题参数
-            updateLinksTheme(theme) {
-                const links = document.querySelectorAll('a');
-                links.forEach(link => {
-                    if (link.href && link.href.startsWith(window.location.origin)) {
-                        const url = new URL(link.href);
-                        url.searchParams.set('theme', theme);
-                        link.href = url.toString();
-                    }
-                });
-            }
-        }
-
-        // 初始化
-        window.addEventListener('load', () => {
-            const themeManager = new ThemeManager();
-            const particleBackground = new ParticleBackground();
-            themeManager.setParticleBackground(particleBackground);
-        });
-
-        // 视频互斥播放控制
-        <!-- 在 script 部分添加 -->
-        <!-- 视频播放控制脚本 -->
-            document.addEventListener('DOMContentLoaded', () => {
-                const videos = document.querySelectorAll('video');
-                
-                videos.forEach((video, index) => {
-                    video.addEventListener('error', (e) => {
-                        console.error(`视频 ${index+1} 加载失败:`, e);
-                        video.parentElement.classList.add('video-error');
-                    });
-                    
-                    // 其他视频事件监听保持不变...
-                });
-            });
-        </script>
 </body>
 </html>

@@ -151,14 +151,38 @@ body {
 
 .project-image {
     width: 100%;
-    height: 200px;
-    overflow: hidden;
+    max-width: 100%;
+    height: auto;
+    overflow: visible;
 }
 
-.project-image img {
+.project-image img,
+.carousel-item img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.carousel-item {
+    position: relative;
+    height: auto;
+    overflow: visible;
+    z-index: 1;
+}
+
+.carousel {
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+}
+
+.carousel-inner {
+    overflow: visible;
+    position: relative;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
 }
 
 .project-content {
@@ -237,9 +261,8 @@ body {
 .project-image, .experiment-preview {
     position: relative;
     width: 100%;
-    height: 0;
-    padding-top: 75%;
-    overflow: hidden;
+    aspect-ratio: 16/9;
+    overflow: visible;
     border-radius: 8px;
 }
 
@@ -346,6 +369,12 @@ body {
         grid-template-columns: 1fr;
     }
 
+    .project-image {
+        width: 100%;
+        height: auto;
+        overflow: visible;
+    }
+
     .timeline::before {
         left: 1rem;
     }
@@ -356,5 +385,45 @@ body {
 
     .timeline-item::before {
         left: 0.75rem;
+    }
+
+    .carousel-inner {
+    overflow: visible;
+    position: relative;
+        height: auto;
+        overflow: hidden;
+    }
+}
+
+/* 图片库布局 */
+.image-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.image-gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    aspect-ratio: 16/9;
+}
+
+.image-gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.image-gallery-item:hover img {
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .image-gallery {
+        grid-template-columns: 1fr;
+        gap: 1rem;
     }
 }
